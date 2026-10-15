@@ -1,0 +1,185 @@
+# Especificacion Docker Compose V2 para la plataforma web corporativa LESSSO
+# Sintaxis moderna: se omite el atributo obsoleto 'version'
+
+name: lessso-ecosystem
+
+services:
+  # ----------------------------------------------------------------------------
+  # PROXY INVERSO / ADMINISTRADOR SSL: Nginx Proxy Manager
+  # ----------------------------------------------------------------------------
+  lessso-proxy:
+    image: jc21/nginx-proxy-manager:latest
+    container_name: lessso-proxy
+    restart: unless-stopped
+    ports:
+      - "80:80"     # Trafico HTTP publico
+      - "443:443"   # Trafico HTTPS seguro
+      - "81:81"     # Panel de administracion web de Nginx Proxy Manager
+    environment:
+      DISABLE_IPV6: "true"
+    volumes:
+      - npm_data:/data
+      - npm_letsencrypt:/etc/letsencrypt
+    networks:
+      - lessso-network
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 256M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:81"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # ----------------------------------------------------------------------------
+  # BASE DE DATOS PRINCIPAL: PostgreSQL 16 Alpine
+  # ----------------------------------------------------------------------------
+  lessso-db:
+    image: postgres:16-alpine
+    container_name: lessso-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-lessso_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-lessso_secure_db_password_change_me}
+      POSTGRES_DB: ${POSTGRES_DB:-lessso_production}
+    ports:
+      - "${PORT_DATABASE:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker/scripts/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
+    networks:
+      - lessso-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1.00"
+          memory: 512M
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-lessso_admin} -d ${POSTGRES_DB:-lessso_production}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  # ----------------------------------------------------------------------------
+  # SERVICIO DE CACHE Y CONTROL DE FRECUENCIA: Redis 7 Alpine
+  # ----------------------------------------------------------------------------
+  lessso-redis:
+    image: redis:7-alpine
+    container_name: lessso-redis
+    restart: unless-stopped
+    command: >
+      sh -c 'if [ -n "$$REDIS_PASSWORD" ]; then
+        redis-server --requirepass "$$REDIS_PASSWORD" --appendonly yes;
+      else
+        redis-server --appendonly yes;
+      fi'
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-lessso_redis_secure_password_change_me}
+    ports:
+      - "${PORT_REDIS:-6379}:6379"
+    volumes:
+      - redisdata:/data
+    networks:
+      - lessso-network
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 256M
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # ----------------------------------------------------------------------------
+  # SERVIDOR API BACKEND: Fastify + TypeScript + Drizzle ORM
+  # ----------------------------------------------------------------------------
+  lessso-back:
+    build:
+      context: .
+      dockerfile: docker/back.Dockerfile
+    container_name: lessso-back
+    restart: unless-stopped
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: ${PORT_BACKEND:-4000}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+      DATABASE_URL: ${DATABASE_URL:-postgresql://lessso_admin:lessso_secure_db_password_change_me@lessso-db:5432/lessso_production}
+      REDIS_URL: ${REDIS_URL:-redis://:lessso_redis_secure_password_change_me@lessso-redis:6379}
+      TWENTY_API_URL: ${TWENTY_API_URL:-}
+      TWENTY_API_KEY: ${TWENTY_API_KEY:-}
+      COOLDOWN_SECONDS: ${COOLDOWN_SECONDS:-90}
+      HONEYPOT_FIELD_NAME: ${HONEYPOT_FIELD_NAME:-website_verification_code}
+      OFFICIAL_CONTACT_EMAIL: ${OFFICIAL_CONTACT_EMAIL:-contacto@lessso.com}
+    ports:
+      - "${PORT_BACKEND:-4000}:4000"
+    depends_on:
+      lessso-db:
+        condition: service_healthy
+      lessso-redis:
+        condition: service_healthy
+    networks:
+      - lessso-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1.00"
+          memory: 512M
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:4000/api/v1/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+  # ----------------------------------------------------------------------------
+  # APLICACION WEB FRONTEND: Next.js App Router + Tailwind CSS
+  # ----------------------------------------------------------------------------
+  lessso-front:
+    build:
+      context: .
+      dockerfile: docker/front.Dockerfile
+    container_name: lessso-front
+    restart: unless-stopped
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: ${PORT_FRONTEND:-3000}
+      NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:-http://localhost:4000}
+    ports:
+      - "${PORT_FRONTEND:-3000}:3000"
+    depends_on:
+      - lessso-back
+    networks:
+      - lessso-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1.00"
+          memory: 512M
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+networks:
+  lessso-network:
+    name: lessso-network
+    driver: bridge
+
+volumes:
+  npm_data:
+    name: lessso_npm_data
+  npm_letsencrypt:
+    name: lessso_npm_letsencrypt
+  pgdata:
+    name: lessso_pgdata
+  redisdata:
+    name: lessso_redisdata

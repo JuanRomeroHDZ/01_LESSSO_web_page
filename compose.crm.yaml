@@ -1,0 +1,71 @@
+# Especificacion Docker Compose V2 para despliegue autoalojado de Twenty CRM
+# Conectado a la misma red para permitir comunicacion interna con lessso-back
+
+name: lessso-twenty-crm
+
+services:
+  # ----------------------------------------------------------------------------
+  # BASE DE DATOS DEDICADA PARA TWENTY CRM: PostgreSQL 16
+  # ----------------------------------------------------------------------------
+  twenty-db:
+    image: postgres:16-alpine
+    container_name: lessso-crm-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${TWENTY_DB_USER:-twenty_user}
+      POSTGRES_PASSWORD: ${TWENTY_DB_PASSWORD:-twenty_secure_password_123}
+      POSTGRES_DB: ${TWENTY_DB_NAME:-twenty_crm}
+    volumes:
+      - twenty_pgdata:/var/lib/postgresql/data
+    networks:
+      - lessso-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1.00"
+          memory: 512M
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${TWENTY_DB_USER:-twenty_user} -d ${TWENTY_DB_NAME:-twenty_crm}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ----------------------------------------------------------------------------
+  # SERVIDOR PRINCIPAL DE TWENTY CRM
+  # ----------------------------------------------------------------------------
+  twenty-server:
+    image: twentycrm/twenty:latest
+    container_name: lessso-crm-server
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      PG_DATABASE_URL: postgresql://${TWENTY_DB_USER:-twenty_user}:${TWENTY_DB_PASSWORD:-twenty_secure_password_123}@twenty-db:5432/${TWENTY_DB_NAME:-twenty_crm}
+      SERVER_URL: ${TWENTY_SERVER_URL:-http://localhost:3001}
+      FRONT_BASE_URL: ${TWENTY_FRONT_URL:-http://localhost:3001}
+      STORAGE_TYPE: local
+      APP_SECRET: ${TWENTY_APP_SECRET:-twenty_super_secret_crm_key_change_me_prod}
+    depends_on:
+      twenty-db:
+        condition: service_healthy
+    volumes:
+      - twenty_data:/app/packages/twenty-server/.local-storage
+    networks:
+      - lessso-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1.50"
+          memory: 1024M
+
+networks:
+  lessso-network:
+    external: true
+
+volumes:
+  twenty_pgdata:
+    name: lessso_twenty_pgdata
+  twenty_data:
+    name: lessso_twenty_data

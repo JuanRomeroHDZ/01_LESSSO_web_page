@@ -1,0 +1,38 @@
+# Configuracion para despliegue del Frontend de LESSSO en Netlify
+# Cumple con politicas estrictas de seguridad y soporte para Next.js App Router
+
+[build]
+  base = "front"
+  publish = ".next"
+  command = "npm run build"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# ------------------------------------------------------------------------------
+# CABECERAS HTTP DE SEGURIDAD ESTRICTA
+# ------------------------------------------------------------------------------
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), browsing-topics=()"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; connect-src 'self' https: http://localhost:4000; frame-ancestors 'none';"
+
+# ------------------------------------------------------------------------------
+# REDIRECCIONES / PROXY HACIA BACKEND EN VPS O CONTENEDORES
+# ------------------------------------------------------------------------------
+[[redirects]]
+  from = "/api/v1/*"
+  to = "https://api.lessso.com/api/v1/:splat"
+  status = 200
+  force = false
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = false
