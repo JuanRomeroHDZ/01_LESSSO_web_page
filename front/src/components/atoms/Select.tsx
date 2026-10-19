@@ -27,8 +27,8 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           className={cn(
             "w-full px-4 py-3 text-sm font-sans font-light appearance-none",
             "rounded-[3px]", // Esquinas al 10%
-            "bg-[#080A0A]/40 text-[#FFFFFF]",
-            "border border-neutral-800 transition-all duration-200 outline-none pr-10",
+            "bg-[#F8F8F6] dark:bg-[#080A0A]/40 text-[#080A0A] dark:text-[#FFFFFF]",
+            "border border-neutral-300 dark:border-neutral-800 transition-all duration-200 outline-none pr-10",
             "focus:border-[#A98242] focus:ring-1 focus:ring-[#A98242]/30",
             hasError && "border-red-500/80 focus:border-red-500 focus:ring-red-500/20",
             className
@@ -36,7 +36,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           {...props}
         >
           {placeholder && (
-            <option value="" disabled className="bg-[#080A0A] text-neutral-500">
+            <option value="" disabled className="bg-[#FFFFFF] dark:bg-[#080A0A] text-neutral-400 dark:text-neutral-500">
               {placeholder}
             </option>
           )}
@@ -44,7 +44,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
             const val = typeof opt === "string" ? opt : opt.value;
             const lbl = typeof opt === "string" ? opt : opt.label;
             return (
-              <option key={val} value={val} className="bg-[#080A0A] text-[#FFFFFF]">
+              <option key={val} value={val} className="bg-[#FFFFFF] dark:bg-[#080A0A] text-[#080A0A] dark:text-[#FFFFFF]">
                 {lbl}
               </option>
             );

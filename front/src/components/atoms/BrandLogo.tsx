@@ -28,7 +28,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
 }) => {
   const colorMap = {
     white: {
-      text: "text-[#FFFFFF]",
+      text: "text-[#080A0A] dark:text-[#FFFFFF]",
       fill: "#FFFFFF",
       svgPath: THEME_PALETTE.logos.white,
     },

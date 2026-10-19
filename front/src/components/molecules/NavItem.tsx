@@ -45,10 +45,10 @@ export const NavItem: React.FC<NavItemProps> = ({
       href={href}
       onClick={handleScrollClick}
       className={cn(
-        "relative px-3 py-1.5 text-xs font-sans font-light uppercase tracking-widest text-neutral-300 transition-all duration-300",
+        "relative px-3 py-1.5 text-xs font-sans font-light uppercase tracking-widest text-[#080A0A]/75 dark:text-neutral-300 hover:text-[#080A0A] dark:hover:text-[#FFFFFF] transition-all duration-300",
         "rounded-[2px]", // Esquinas al 10%
         divisionColor && hoverStyles[divisionColor],
-        !divisionColor && "hover:text-[#FFFFFF] hover:bg-[#080A0A]",
+        !divisionColor && "hover:bg-[#EFECE6] dark:hover:bg-[#121616]",
         className
       )}
     >

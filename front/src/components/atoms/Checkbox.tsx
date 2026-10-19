@@ -27,7 +27,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
           className={cn(
             "w-4 h-4 flex items-center justify-center transition-all duration-200",
             "rounded-[2px]", // Esquinas al 10%
-            "border border-neutral-700 bg-[#080A0A]/60",
+            "border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-[#080A0A]/60",
             "peer-checked:border-[#A98242] peer-checked:bg-[#A98242]",
             "peer-focus:ring-1 peer-focus:ring-[#A98242]/40",
             hasError && "border-red-500",

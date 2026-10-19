@@ -9,8 +9,9 @@ export interface CelestialSunburstProps {
  * Componente Atomo CelestialSunburst
  * Composicion vectorial SVG abstracta de lineas astronomicas y celestiales.
  * Ciclo de "suspiro" de 7 segundos con cubic-bezier(0.22, 1, 0.36, 1).
- * Trazos finos (0.5px a 1.5px) con paleta: Dorado (#A98242), Blanco (#FFFFFF)
- * y destellos de divisiones: Rojo (#6E1F1F), Jade (#164248) y Azul (#1E2B66).
+ * Trazos finos (0.5px a 1.5px) con paleta: Dorado (#A98242), Contraste adaptativo
+ * (#080A0A en Modo Claro / #FFFFFF en Modo Oscuro) y destellos de divisiones:
+ * Rojo (#6E1F1F), Jade (#164248) y Azul (#1E2B66).
  * Cero emojis.
  */
 export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
@@ -24,11 +25,11 @@ export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
     { angle: 180, length: 235, stroke: "#A98242", width: 1.2, opacity: 0.9, hasCross: true },
     { angle: 270, length: 235, stroke: "#A98242", width: 1.2, opacity: 0.9, hasCross: true },
 
-    // Rayos Intercardinales (Blanco #FFFFFF)
-    { angle: 45, length: 215, stroke: "#FFFFFF", width: 0.8, opacity: 0.65, dash: "4 3" },
-    { angle: 135, length: 215, stroke: "#FFFFFF", width: 0.8, opacity: 0.65, dash: "4 3" },
-    { angle: 225, length: 215, stroke: "#FFFFFF", width: 0.8, opacity: 0.65, dash: "4 3" },
-    { angle: 315, length: 215, stroke: "#FFFFFF", width: 0.8, opacity: 0.65, dash: "4 3" },
+    // Rayos Intercardinales (Contraste Adaptativo)
+    { angle: 45, length: 215, isContrast: true, width: 0.8, opacity: 0.65, dash: "4 3" },
+    { angle: 135, length: 215, isContrast: true, width: 0.8, opacity: 0.65, dash: "4 3" },
+    { angle: 225, length: 215, isContrast: true, width: 0.8, opacity: 0.65, dash: "4 3" },
+    { angle: 315, length: 215, isContrast: true, width: 0.8, opacity: 0.65, dash: "4 3" },
 
     // Destellos Division Cybersecurity (Rojo #6E1F1F)
     { angle: 22.5, length: 195, stroke: "#6E1F1F", width: 1.2, opacity: 0.85 },
@@ -42,23 +43,23 @@ export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
     { angle: 112.5, length: 190, stroke: "#1E2B66", width: 1.2, opacity: 0.85 },
     { angle: 292.5, length: 190, stroke: "#1E2B66", width: 1.2, opacity: 0.85 },
 
-    // Rayos Astronomicos Secundarios (Dorado / Blanco con opacidades sutiles)
+    // Rayos Astronomicos Secundarios (Dorado / Contraste con opacidades sutiles)
     { angle: 11.25, length: 160, stroke: "#A98242", width: 0.6, opacity: 0.4 },
-    { angle: 33.75, length: 140, stroke: "#FFFFFF", width: 0.5, opacity: 0.35 },
+    { angle: 33.75, length: 140, isContrast: true, width: 0.5, opacity: 0.35 },
     { angle: 56.25, length: 170, stroke: "#A98242", width: 0.6, opacity: 0.45 },
-    { angle: 78.75, length: 145, stroke: "#FFFFFF", width: 0.5, opacity: 0.3 },
+    { angle: 78.75, length: 145, isContrast: true, width: 0.5, opacity: 0.3 },
     { angle: 101.25, length: 165, stroke: "#A98242", width: 0.6, opacity: 0.4 },
-    { angle: 123.75, length: 150, stroke: "#FFFFFF", width: 0.5, opacity: 0.35 },
+    { angle: 123.75, length: 150, isContrast: true, width: 0.5, opacity: 0.35 },
     { angle: 146.25, length: 175, stroke: "#A98242", width: 0.6, opacity: 0.45 },
-    { angle: 168.75, length: 140, stroke: "#FFFFFF", width: 0.5, opacity: 0.3 },
+    { angle: 168.75, length: 140, isContrast: true, width: 0.5, opacity: 0.3 },
     { angle: 191.25, length: 160, stroke: "#A98242", width: 0.6, opacity: 0.4 },
-    { angle: 213.75, length: 155, stroke: "#FFFFFF", width: 0.5, opacity: 0.35 },
+    { angle: 213.75, length: 155, isContrast: true, width: 0.5, opacity: 0.35 },
     { angle: 236.25, length: 170, stroke: "#A98242", width: 0.6, opacity: 0.45 },
-    { angle: 258.75, length: 145, stroke: "#FFFFFF", width: 0.5, opacity: 0.3 },
+    { angle: 258.75, length: 145, isContrast: true, width: 0.5, opacity: 0.3 },
     { angle: 281.25, length: 165, stroke: "#A98242", width: 0.6, opacity: 0.4 },
-    { angle: 303.75, length: 150, stroke: "#FFFFFF", width: 0.5, opacity: 0.35 },
+    { angle: 303.75, length: 150, isContrast: true, width: 0.5, opacity: 0.35 },
     { angle: 326.25, length: 175, stroke: "#A98242", width: 0.6, opacity: 0.45 },
-    { angle: 348.75, length: 140, stroke: "#FFFFFF", width: 0.5, opacity: 0.3 },
+    { angle: 348.75, length: 140, isContrast: true, width: 0.5, opacity: 0.3 },
   ];
 
   // Graduaciones de grados perimetrales cada 10 grados (36 marcas)
@@ -74,7 +75,7 @@ export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
     >
       {/* Resplandor ambiental de fondo */}
       <div
-        className="absolute w-[80%] h-[80%] rounded-[3px] bg-[radial-gradient(circle,rgba(169,130,66,0.12)_0%,rgba(8,10,10,0)_70%)] blur-2xl opacity-60"
+        className="absolute w-[80%] h-[80%] rounded-[3px] bg-[radial-gradient(circle,rgba(169,130,66,0.15)_0%,rgba(169,130,66,0)_70%)] blur-2xl opacity-60"
         aria-hidden="true"
       />
 
@@ -88,9 +89,24 @@ export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
           <radialGradient id="celestialCoreGlow" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#A98242" stopOpacity="0.4" />
             <stop offset="50%" stopColor="#A98242" stopOpacity="0.1" />
-            <stop offset="100%" stopColor="#080A0A" stopOpacity="0" />
+            <stop offset="100%" stopColor="#A98242" stopOpacity="0" />
           </radialGradient>
         </defs>
+
+        <style>{`
+          .sun-contrast {
+            stroke: #080A0A;
+          }
+          .dark .sun-contrast {
+            stroke: #FFFFFF;
+          }
+          .sun-core-bg {
+            fill: #F8F8F6;
+          }
+          .dark .sun-core-bg {
+            fill: #080A0A;
+          }
+        `}</style>
 
         {/* Nucleo con halo difuminado */}
         <circle cx="250" cy="250" r="70" fill="url(#celestialCoreGlow)" />
@@ -107,7 +123,7 @@ export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
             fill="none"
             stroke="#A98242"
             strokeWidth="0.5"
-            strokeOpacity="0.25"
+            strokeOpacity="0.3"
           />
 
           {/* Marcas de graduacion perimetral */}
@@ -124,9 +140,9 @@ export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
                 y1={y1}
                 x2={x2}
                 y2={y2}
-                stroke="#FFFFFF"
+                className="sun-contrast"
                 strokeWidth="0.6"
-                strokeOpacity={deg % 90 === 0 ? 0.7 : deg % 30 === 0 ? 0.4 : 0.2}
+                strokeOpacity={deg % 90 === 0 ? 0.75 : deg % 30 === 0 ? 0.45 : 0.25}
               />
             );
           })}
@@ -137,9 +153,9 @@ export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
             cy="250"
             r="195"
             fill="none"
-            stroke="#FFFFFF"
+            className="sun-contrast"
             strokeWidth="0.5"
-            strokeOpacity="0.18"
+            strokeOpacity="0.25"
             strokeDasharray="3 5"
           />
           <circle
@@ -149,16 +165,16 @@ export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
             fill="none"
             stroke="#A98242"
             strokeWidth="0.75"
-            strokeOpacity="0.35"
+            strokeOpacity="0.4"
           />
           <circle
             cx="250"
             cy="250"
             r="125"
             fill="none"
-            stroke="#FFFFFF"
+            className="sun-contrast"
             strokeWidth="0.5"
-            strokeOpacity="0.22"
+            strokeOpacity="0.25"
             strokeDasharray="2 4"
           />
         </g>
@@ -202,7 +218,7 @@ export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
             fill="none"
             stroke="#6E1F1F"
             strokeWidth="1.2"
-            strokeOpacity="0.8"
+            strokeOpacity="0.85"
             transform="rotate(82 250 250)"
           />
 
@@ -215,7 +231,7 @@ export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
             fill="none"
             stroke="#A98242"
             strokeWidth="0.8"
-            strokeOpacity="0.5"
+            strokeOpacity="0.55"
             strokeDasharray="4 4"
             transform="rotate(-65 250 250)"
           />
@@ -227,7 +243,7 @@ export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
         <g>
           {rays.map((ray, idx) => {
             const rad = (ray.angle * Math.PI) / 180;
-            const startDist = 38; // Nacen desde el borde del nucleo
+            const startDist = 38;
             const x1 = 250 + startDist * Math.cos(rad);
             const y1 = 250 + startDist * Math.sin(rad);
             const x2 = 250 + ray.length * Math.cos(rad);
@@ -248,7 +264,8 @@ export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
                   y1={y1}
                   x2={x2}
                   y2={y2}
-                  stroke={ray.stroke}
+                  stroke={ray.isContrast ? undefined : ray.stroke}
+                  className={ray.isContrast ? "sun-contrast" : undefined}
                   strokeWidth={ray.width}
                   strokeOpacity={ray.opacity}
                   strokeDasharray={ray.dash}
@@ -270,13 +287,150 @@ export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
                     cx={x2}
                     cy={y2}
                     r="1.5"
-                    fill={ray.stroke}
+                    className="sun-contrast"
+                    fill="currentColor"
                     opacity={ray.opacity}
                   />
                 )}
               </g>
             );
           })}
+        </g>
+
+        {/* ------------------------------------------------------------------ */}
+        {/* PULSOS DE ESTELA EN RAYOS (stroke-dashoffset hacia las puntas)     */}
+        {/* ------------------------------------------------------------------ */}
+        <g>
+          {[
+            { angle: 0, length: 235, stroke: "#A98242", begin: "0s" },
+            { angle: 45, length: 215, isContrast: true, begin: "1s" },
+            { angle: 90, length: 235, stroke: "#A98242", begin: "2s" },
+            { angle: 135, length: 215, isContrast: true, begin: "3s" },
+            { angle: 180, length: 235, stroke: "#A98242", begin: "0.5s" },
+            { angle: 225, length: 215, isContrast: true, begin: "1.5s" },
+            { angle: 270, length: 235, stroke: "#A98242", begin: "2.5s" },
+            { angle: 315, length: 215, isContrast: true, begin: "3.5s" },
+          ].map((pulse, idx) => {
+            const rad = (pulse.angle * Math.PI) / 180;
+            const x1 = 250 + 38 * Math.cos(rad);
+            const y1 = 250 + 38 * Math.sin(rad);
+            const x2 = 250 + pulse.length * Math.cos(rad);
+            const y2 = 250 + pulse.length * Math.sin(rad);
+            const lineLen = pulse.length - 38;
+
+            return (
+              <line
+                key={`pulse-${idx}`}
+                x1={x1}
+                y1={y1}
+                x2={x2}
+                y2={y2}
+                stroke={pulse.isContrast ? undefined : pulse.stroke}
+                className={pulse.isContrast ? "sun-contrast" : undefined}
+                strokeWidth={1.3}
+                strokeLinecap="round"
+                strokeDasharray="26 260"
+              >
+                <animate
+                  attributeName="stroke-dashoffset"
+                  from="26"
+                  to={`-${lineLen}`}
+                  dur="4s"
+                  repeatCount="indefinite"
+                  begin={pulse.begin}
+                />
+                <animate
+                  attributeName="opacity"
+                  values="0; 0.95; 0.85; 0"
+                  keyTimes="0; 0.15; 0.85; 1"
+                  dur="4s"
+                  repeatCount="indefinite"
+                  begin={pulse.begin}
+                />
+              </line>
+            );
+          })}
+        </g>
+
+        {/* ------------------------------------------------------------------ */}
+        {/* ONDAS ANULARES PERIODICAS DESDE EL NUCLEO (Trazo ultra fino 0.5px) */}
+        {/* ------------------------------------------------------------------ */}
+        <g>
+          <circle
+            cx="250"
+            cy="250"
+            r="38"
+            fill="none"
+            stroke="#A98242"
+            strokeWidth="0.5"
+          >
+            <animate
+              attributeName="r"
+              from="38"
+              to="240"
+              dur="6s"
+              repeatCount="indefinite"
+              begin="0s"
+            />
+            <animate
+              attributeName="opacity"
+              values="0.75; 0.45; 0"
+              keyTimes="0; 0.55; 1"
+              dur="6s"
+              repeatCount="indefinite"
+              begin="0s"
+            />
+          </circle>
+          <circle
+            cx="250"
+            cy="250"
+            r="38"
+            fill="none"
+            className="sun-contrast"
+            strokeWidth="0.5"
+          >
+            <animate
+              attributeName="r"
+              from="38"
+              to="240"
+              dur="6s"
+              repeatCount="indefinite"
+              begin="2s"
+            />
+            <animate
+              attributeName="opacity"
+              values="0.65; 0.35; 0"
+              keyTimes="0; 0.55; 1"
+              dur="6s"
+              repeatCount="indefinite"
+              begin="2s"
+            />
+          </circle>
+          <circle
+            cx="250"
+            cy="250"
+            r="38"
+            fill="none"
+            stroke="#A98242"
+            strokeWidth="0.5"
+          >
+            <animate
+              attributeName="r"
+              from="38"
+              to="240"
+              dur="6s"
+              repeatCount="indefinite"
+              begin="4s"
+            />
+            <animate
+              attributeName="opacity"
+              values="0.75; 0.45; 0"
+              keyTimes="0; 0.55; 1"
+              dur="6s"
+              repeatCount="indefinite"
+              begin="4s"
+            />
+          </circle>
         </g>
 
         {/* ------------------------------------------------------------------ */}
@@ -300,7 +454,7 @@ export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
             cx="250"
             cy="250"
             r="38"
-            fill="#080A0A"
+            className="sun-core-bg"
             stroke="#A98242"
             strokeWidth="1.2"
             strokeOpacity="0.85"
@@ -312,7 +466,7 @@ export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
             cy="250"
             r="24"
             fill="none"
-            stroke="#FFFFFF"
+            className="sun-contrast"
             strokeWidth="0.6"
             strokeOpacity="0.4"
             strokeDasharray="2 2"
@@ -322,7 +476,7 @@ export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
             cx="250"
             cy="250"
             r="12"
-            fill="#080A0A"
+            className="sun-core-bg"
             stroke="#A98242"
             strokeWidth="1"
             strokeOpacity="0.9"

@@ -20,9 +20,13 @@ import { FormField } from "@/components/molecules/FormField";
 import { CooldownTimer } from "@/components/molecules/CooldownTimer";
 import { WhatsAppButton } from "@/components/molecules/WhatsAppButton";
 import { CheckCircle2, ShieldAlert } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { DiagonalLightRays } from "@/components/atoms/DiagonalLightRays";
 
 export interface CrmContactFormProps {
   currentLocale: Locale;
+  isCybersecurity?: boolean;
+  defaultArea?: AreaOfInterest;
 }
 
 const countryDialingCodes = [
@@ -43,7 +47,11 @@ const countryDialingCodes = [
  * Cuenta con conmutador Persona / Empresa, Cooldown de 90 segundos con barra dorada,
  * validacion doble con Zod, trampa Honeypot y boton editorial de WhatsApp.
  */
-export const CrmContactForm: React.FC<CrmContactFormProps> = ({ currentLocale }) => {
+export const CrmContactForm: React.FC<CrmContactFormProps> = ({
+  currentLocale,
+  isCybersecurity = false,
+  defaultArea,
+}) => {
   const t = SITE_CONTENT[currentLocale].contact;
   const [selectedEntity, setSelectedEntity] = useState<EntityType>("PERSON");
   const [submissionSuccess, setSubmissionSuccess] = useState(false);
@@ -74,6 +82,7 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({ currentLocale })
       termsAccepted: false,
       website_verification_code: "",
       projectDetails: "",
+      areaOfInterest: defaultArea || (isCybersecurity ? "Ciberseguridad" : undefined),
     },
   });
 
@@ -138,20 +147,44 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({ currentLocale })
   };
 
   return (
-    <section id="contacto" className="py-28 px-6 md:px-12 bg-[#080A0A] text-[#FFFFFF] relative">
-      <div className="max-w-4xl mx-auto">
+    <section
+      id="contacto"
+      className={cn(
+        "py-28 px-6 md:px-12 relative overflow-hidden transition-colors duration-200",
+        "bg-[#F8F8F6] dark:bg-[#080A0A] text-[#080A0A] dark:text-[#FFFFFF]",
+        "border-t border-neutral-200 dark:border-neutral-900"
+      )}
+    >
+      {/* Soporte de ancla para enlaces directos #contact */}
+      <span id="contact" className="sr-only" aria-hidden="true" />
+
+      {/* Rayos Diagonales de Fondo */}
+      <DiagonalLightRays
+        variant={isCybersecurity ? "cybersecurity" : "home"}
+        opacity={isCybersecurity ? 0.6 : 0.45}
+      />
+
+      {/* Iluminacion ambiental para seccion de Ciberseguridad */}
+      {isCybersecurity && (
+        <div
+          className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-[400px] bg-[radial-gradient(circle,rgba(158,42,43,0.14)_0%,rgba(36,11,11,0.05)_50%,transparent_70%)] blur-3xl select-none opacity-50 dark:opacity-40"
+          aria-hidden="true"
+        />
+      )}
+
+      <div className="max-w-4xl mx-auto relative z-10">
         {/* Encabezado de la Seccion */}
         <div className="flex flex-col items-center text-center mb-16">
-          <span className="font-sans text-xs uppercase tracking-[0.25em] text-[#A98242] mb-3">
+          <span className="font-sans text-xs uppercase tracking-[0.25em] text-[#A98242] mb-3 font-semibold">
             {t.sectionBadge}
           </span>
-          <Heading as="h2" size="xl" className="font-normal mb-4">
+          <Heading as="h2" size="xl" className="font-normal mb-4 text-[#080A0A] dark:text-[#FFFFFF]">
             {t.sectionTitle}{" "}
-            <span className="italic font-normal text-[#F8F8F6]">
+            <span className="italic font-normal text-[#240B0B] dark:text-[#F8F8F6]">
               {t.sectionTitleItalic}
             </span>
           </Heading>
-          <Text variant="lead" className="text-neutral-400 max-w-xl font-light">
+          <Text variant="lead" className="text-[#080A0A]/75 dark:text-neutral-400 max-w-xl font-light">
             {t.sectionSubtitle}
           </Text>
         </div>
@@ -171,13 +204,13 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({ currentLocale })
 
         {/* Mensaje de Exito Inmediato */}
         {submissionSuccess && !isCooldownActive && (
-          <div className="mb-10 p-6 bg-neutral-950 border border-[#A98242]/50 rounded-[3px] flex items-start gap-4">
+          <div className="mb-10 p-6 bg-neutral-100 dark:bg-neutral-950 border border-[#A98242]/50 rounded-[3px] flex items-start gap-4">
             <CheckCircle2 className="w-5 h-5 text-[#A98242] shrink-0 mt-0.5" />
             <div>
-              <h4 className="font-serif text-base text-[#FFFFFF] font-normal mb-1">
+              <h4 className="font-serif text-base text-[#080A0A] dark:text-[#FFFFFF] font-normal mb-1">
                 {t.feedback.successHeading}
               </h4>
-              <p className="font-sans text-xs text-neutral-300 font-light leading-relaxed">
+              <p className="font-sans text-xs text-[#080A0A]/75 dark:text-neutral-300 font-light leading-relaxed">
                 {t.feedback.successText}
               </p>
             </div>
@@ -193,10 +226,17 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({ currentLocale })
         )}
 
         {/* Contenedor del Formulario */}
-        <div className="p-8 md:p-12 bg-[#080A0A] border border-neutral-800 rounded-[3px] shadow-lg">
+        <div
+          className={cn(
+            "p-8 md:p-12 rounded-[3px] transition-all",
+            isCybersecurity
+              ? "bg-[#FFFFFF] dark:bg-[#080A0A]/90 border border-[#7A1C1C]/40 dark:border-[#A98242]/40 shadow-xl"
+              : "bg-[#FFFFFF] dark:bg-[#080A0A]/90 border border-neutral-300 dark:border-neutral-800 shadow-md"
+          )}
+        >
           {/* Conmutador Superior Persona / Empresa (Esquinas al 10%) */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pb-8 mb-8 border-b border-neutral-900">
-            <span className="text-xs uppercase tracking-widest text-neutral-400 font-light">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pb-8 mb-8 border-b border-neutral-200 dark:border-neutral-900">
+            <span className="text-xs uppercase tracking-widest text-[#080A0A]/70 dark:text-neutral-400 font-light">
               Modalidad de Contacto:
             </span>
             <EntitySwitch
@@ -404,7 +444,7 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({ currentLocale })
                 rows={4}
                 maxLength={500}
                 placeholder={t.fields.projectDetails.placeholder}
-                className="w-full px-4 py-3 text-sm font-sans font-light rounded-[3px] bg-[#080A0A]/40 text-[#FFFFFF] placeholder:text-neutral-500 border border-neutral-800 transition-all duration-200 outline-none focus:border-[#A98242] focus:ring-1 focus:ring-[#A98242]/30 resize-none"
+                className="w-full px-4 py-3 text-sm font-sans font-light rounded-[3px] bg-[#F8F8F6] dark:bg-[#080A0A]/40 text-[#080A0A] dark:text-[#FFFFFF] placeholder:text-neutral-400 dark:placeholder:text-neutral-500 border border-neutral-300 dark:border-neutral-800 transition-all duration-200 outline-none focus:border-[#A98242] focus:ring-1 focus:ring-[#A98242]/30 resize-none"
                 {...register("projectDetails")}
               />
             </FormField>
@@ -422,19 +462,19 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({ currentLocale })
                   />
                 )}
               />
-              <label className="text-xs text-neutral-400 font-light select-none cursor-pointer leading-tight">
+              <label className="text-xs text-[#080A0A]/70 dark:text-neutral-400 font-light select-none cursor-pointer leading-tight">
                 {t.fields.terms.checkbox}
                 {/* Enlace futuro: vincular a /terminos y /privacidad una vez redactados */}
               </label>
             </div>
             {errors.termsAccepted && (
-              <span className="text-xs text-red-400 block -mt-3 font-light">
+              <span className="text-xs text-red-500 dark:text-red-400 block -mt-3 font-light">
                 {errors.termsAccepted.message}
               </span>
             )}
 
             {/* Botones de Envio y Canal de WhatsApp */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pt-4 border-t border-neutral-900">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pt-4 border-t border-neutral-200 dark:border-neutral-900">
               <Button
                 type="submit"
                 variant="primary"

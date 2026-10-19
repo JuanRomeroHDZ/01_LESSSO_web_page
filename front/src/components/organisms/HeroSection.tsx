@@ -41,9 +41,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ currentLocale }) => {
   };
 
   return (
-    <section className="relative min-h-[92vh] flex flex-col justify-between pt-36 pb-16 px-6 md:px-12 lg:px-16 bg-[#080A0A] overflow-hidden w-full">
+    <section className="relative min-h-[92vh] flex flex-col justify-between pt-36 pb-16 px-6 md:px-12 lg:px-16 bg-[#F8F8F6] dark:bg-[#080A0A] text-[#080A0A] dark:text-[#FFFFFF] transition-colors duration-200 overflow-hidden w-full">
       {/* Resplandor ambiental radial difuminado al 3% */}
-      <Spotlight />
+      <Spotlight className="opacity-20 dark:opacity-35" />
 
       {/* Contenido Central: Layout de 2 Columnas a Ancho Completo */}
       <div className="w-full z-10 my-auto py-8">
@@ -53,15 +53,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ currentLocale }) => {
             {/* Pre-titulo arquitectonico */}
             <div className="flex items-center gap-3 mb-6">
               <div className="w-8 h-[1px] bg-[#A98242]" />
-              <span className="font-sans text-xs uppercase tracking-[0.25em] text-[#A98242] font-normal">
+              <span className="font-sans text-xs uppercase tracking-[0.25em] text-[#A98242] font-medium">
                 {t.pretitle}
               </span>
             </div>
 
             {/* Titulo Maestro en Lora con cursivas editoriales */}
-            <Heading as="h1" size="display" className="text-[#FFFFFF] mb-8 font-normal max-w-3xl">
+            <Heading as="h1" size="display" className="text-[#080A0A] dark:text-[#FFFFFF] mb-8 font-normal max-w-3xl">
               {t.titleLine1}{" "}
-              <span className="italic font-normal text-[#F8F8F6]">
+              <span className="italic font-normal text-[#240B0B] dark:text-[#F8F8F6]">
                 {t.titleLine2Italic}
               </span>{" "}
               {t.titleLine3}
@@ -71,7 +71,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ currentLocale }) => {
             <Text
               variant="lead"
               weight="light"
-              className="text-neutral-300 max-w-2xl mb-10 font-light leading-relaxed text-base md:text-lg"
+              className="text-[#080A0A]/75 dark:text-neutral-300 max-w-2xl mb-10 font-light leading-relaxed text-base md:text-lg"
             >
               {t.subtitle}
             </Text>
@@ -82,7 +82,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ currentLocale }) => {
                 variant="primary"
                 size="lg"
                 onClick={scrollToContact}
-                className="group"
+                className="group bg-[#080A0A] text-[#FFFFFF] dark:bg-[#080A0A] dark:text-[#FFFFFF] border-[#A98242]/50 hover:border-[#A98242]"
               >
                 <span>{t.ctaPrimary}</span>
               </Button>
@@ -91,14 +91,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ currentLocale }) => {
                 variant="secondary"
                 size="lg"
                 onClick={scrollToUs}
-                className="text-neutral-300 border-neutral-800"
+                className="text-[#080A0A] dark:text-neutral-300 border-neutral-300 dark:border-neutral-800 hover:border-[#A98242]"
               >
                 <span>{t.ctaSecondary}</span>
               </Button>
             </div>
 
             {/* Micro-indicadores de Divisiones Tecnicas */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-12 mt-10 border-t border-neutral-900 w-full text-xs font-sans text-neutral-400">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-12 mt-10 border-t border-neutral-200 dark:border-neutral-900 w-full text-xs font-sans text-neutral-600 dark:text-neutral-400">
               <div className="flex items-center gap-3">
                 <Shield className="w-4 h-4 text-[#A98242] shrink-0" />
                 <span className="font-light tracking-wide">Blindaje de Infraestructura</span>
@@ -114,8 +114,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ currentLocale }) => {
             </div>
           </div>
 
-          {/* Columna Derecha: 5 columnas con el Sol Celestial animado */}
-          <div className="lg:col-span-5 flex items-center justify-center relative w-full overflow-visible">
+          {/* Columna Derecha: 5 columnas con el Sol Celestial animado (Oculto en movil) */}
+          <div className="hidden lg:flex lg:col-span-5 items-center justify-center relative w-full overflow-visible">
             <CelestialSunburst />
           </div>
         </div>

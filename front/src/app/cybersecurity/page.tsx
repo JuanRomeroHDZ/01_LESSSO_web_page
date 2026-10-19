@@ -1,14 +1,15 @@
-import { NotFoundView } from "@/components/organisms/NotFoundView";
+import { CybersecurityView } from "@/components/organisms/CybersecurityView";
 
 export const metadata = {
-  title: "Ciberseguridad - Módulo en Despliegue | LESSSO",
-  description: "División técnica de ciberseguridad en proceso de despliegue controlado.",
+  title: "Ciberseguridad & Penetration Testing | LESSSO",
+  description:
+    "Seguridad ofensiva, auditorías de penetración (Pentest) y bastionado crítico para aplicaciones web, APIs, redes y servidores empresariales.",
 };
 
 /**
- * Pantalla de modulo en despliegue para la division de Ciberseguridad
- * Renderiza la vista 404 personalizada independiente
+ * Página Oficial de la División de Ciberseguridad de LESSSO
+ * Especializada en Penetration Testing y Seguridad Ofensiva/Defensiva Práctica
  */
 export default function CybersecurityPage() {
-  return <NotFoundView />;
+  return <CybersecurityView />;
 }

@@ -16,7 +16,7 @@ import { ArrowLeft, Terminal } from "lucide-react";
  */
 export const NotFoundView: React.FC = () => {
   return (
-    <main className="min-h-screen w-full bg-[#080A0A] text-[#FFFFFF] flex flex-col justify-between p-8 md:p-16 relative overflow-hidden select-none">
+    <main className="min-h-screen w-full bg-[#F8F8F6] dark:bg-[#080A0A] text-[#080A0A] dark:text-[#FFFFFF] transition-colors duration-300 flex flex-col justify-between p-8 md:p-16 relative overflow-hidden select-none">
       {/* Textura de grano editorial y luz ambiental */}
       <FilmGrain opacity={0.04} />
       <Spotlight />
@@ -41,15 +41,15 @@ export const NotFoundView: React.FC = () => {
         </div>
 
         {/* Codigo 404 en tipografia Lora con trazo arquitectonico */}
-        <Heading as="h1" size="display" className="font-serif font-light text-[#FFFFFF] mb-4">
+        <Heading as="h1" size="display" className="font-serif font-light text-[#080A0A] dark:text-[#FFFFFF] mb-4">
           404 <span className="font-serif italic font-normal text-[#A98242]">/</span>
         </Heading>
 
-        <Heading as="h2" size="lg" className="font-normal text-[#FFFFFF] mb-6">
+        <Heading as="h2" size="lg" className="font-normal text-[#080A0A] dark:text-[#FFFFFF] mb-6">
           Ruta no disponible o en proceso de arquitectura
         </Heading>
 
-        <Text variant="lead" className="text-neutral-400 font-light leading-relaxed mb-8">
+        <Text variant="lead" className="text-neutral-600 dark:text-neutral-400 font-light leading-relaxed mb-8">
           La división o sección que intenta consultar se encuentra actualmente bajo proceso de
           auditoría, desarrollo de especificaciones o migración controlada. No se han detectado brechas ni
           fallos en la infraestructura central.
@@ -60,7 +60,7 @@ export const NotFoundView: React.FC = () => {
         {/* Boton de Retorno con Esquinas al 10% */}
         <Link
           href="/"
-          className="inline-flex items-center gap-3 px-8 py-4 bg-[#F8F8F6] text-[#080A0A] font-sans text-xs uppercase tracking-widest font-medium rounded-[3px] hover:bg-[#FFFFFF] transition-all duration-300 shadow-md group"
+          className="inline-flex items-center gap-3 px-8 py-4 bg-[#080A0A] text-[#F8F8F6] hover:bg-neutral-800 dark:bg-[#F8F8F6] dark:text-[#080A0A] dark:hover:bg-[#FFFFFF] font-sans text-xs uppercase tracking-widest font-medium rounded-[3px] transition-all duration-300 shadow-md group"
         >
           <ArrowLeft className="w-4 h-4 transition-transform duration-300 group-hover:-translate-x-1" />
           <span>Regresar a la Página Principal</span>
@@ -68,7 +68,7 @@ export const NotFoundView: React.FC = () => {
       </div>
 
       {/* Pie de pantalla 404 */}
-      <div className="w-full flex items-center justify-between z-10 text-[11px] font-mono text-neutral-600">
+      <div className="w-full flex items-center justify-between z-10 text-[11px] font-mono text-neutral-500 dark:text-neutral-600">
         <span>LESSSO TECHNICAL ECOSYSTEM</span>
         <span>INFRASTRUCTURE RESILIENCE V1.0</span>
       </div>

@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { BrandLogo } from "@/components/atoms/BrandLogo";
 import { NavItem } from "@/components/molecules/NavItem";
-import { LangSwitcher } from "@/components/molecules/LangSwitcher";
+import { CompactControls } from "@/components/molecules/CompactControls";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
 import { Locale, SITE_CONTENT } from "@/config/site-content";
 import { cn } from "@/lib/utils";
@@ -20,6 +20,7 @@ export interface SmartHeaderProps {
  * - Navegacion a la derecha con separadores finos.
  * - Ocultamiento suave al hacer scroll hacia abajo y reaparicion inmediata al subir.
  * - Sin boton de Login (documentado en PENDIENTES.md para la Fase 2).
+ * - Dos botones compactos (Idioma + Tema) al final del menu en Inicio.
  */
 export const SmartHeader: React.FC<SmartHeaderProps> = ({
   currentLocale,
@@ -38,8 +39,8 @@ export const SmartHeader: React.FC<SmartHeaderProps> = ({
         "fixed top-0 left-0 right-0 z-40 w-full transition-all duration-300 backdrop-blur-md",
         isHidden ? "-translate-y-full" : "translate-y-0",
         isTop
-          ? "bg-[#080A0A]/70 border-b border-transparent py-5"
-          : "bg-[#080A0A]/95 border-b border-neutral-800/80 py-3.5 shadow-md"
+          ? "bg-[#F8F8F6]/85 dark:bg-[#080A0A]/70 border-b border-transparent py-5"
+          : "bg-[#F8F8F6]/95 dark:bg-[#080A0A]/95 border-b border-neutral-300/80 dark:border-neutral-800/80 py-3.5 shadow-sm dark:shadow-md"
       )}
     >
       <div className="w-full px-6 md:px-12 lg:px-16 flex items-center justify-between">
@@ -60,7 +61,7 @@ export const SmartHeader: React.FC<SmartHeaderProps> = ({
             divisionColor="cyber"
           />
 
-          <span className="text-neutral-700 select-none text-xs" aria-hidden="true">|</span>
+          <span className="text-neutral-400 dark:text-neutral-700 select-none text-xs" aria-hidden="true">|</span>
 
           <NavItem
             label={t.software}
@@ -68,7 +69,7 @@ export const SmartHeader: React.FC<SmartHeaderProps> = ({
             divisionColor="software"
           />
 
-          <span className="text-neutral-700 select-none text-xs" aria-hidden="true">|</span>
+          <span className="text-neutral-400 dark:text-neutral-700 select-none text-xs" aria-hidden="true">|</span>
 
           <NavItem
             label={t.infrastructure}
@@ -76,7 +77,7 @@ export const SmartHeader: React.FC<SmartHeaderProps> = ({
             divisionColor="infra"
           />
 
-          <span className="text-neutral-700 select-none text-xs" aria-hidden="true">|</span>
+          <span className="text-neutral-400 dark:text-neutral-700 select-none text-xs" aria-hidden="true">|</span>
 
           {/* Enlaces con desplazamiento suave (smooth scroll) */}
           <NavItem
@@ -85,7 +86,7 @@ export const SmartHeader: React.FC<SmartHeaderProps> = ({
             isScrollLink
           />
 
-          <span className="text-neutral-700 select-none text-xs" aria-hidden="true">|</span>
+          <span className="text-neutral-400 dark:text-neutral-700 select-none text-xs" aria-hidden="true">|</span>
 
           <NavItem
             label={t.contact}
@@ -93,26 +94,26 @@ export const SmartHeader: React.FC<SmartHeaderProps> = ({
             isScrollLink
           />
 
-          <span className="text-neutral-700 select-none text-xs ml-2 mr-1" aria-hidden="true">|</span>
+          <span className="text-neutral-400 dark:text-neutral-700 select-none text-xs ml-2 mr-1" aria-hidden="true">|</span>
 
-          {/* Selector sutil de Idioma ES / EN */}
-          <LangSwitcher
+          {/* Controles Compactos de Idioma (ES/EN) y Tema (Claro/Oscuro) */}
+          <CompactControls
             currentLocale={currentLocale}
             onLocaleChange={onLocaleChange}
             className="ml-2"
           />
         </nav>
 
-        {/* Boton Hamburguesa para moviles */}
-        <div className="flex items-center gap-3 lg:hidden">
-          <LangSwitcher
+        {/* Boton Hamburguesa y controles para moviles */}
+        <div className="flex items-center gap-2 lg:hidden">
+          <CompactControls
             currentLocale={currentLocale}
             onLocaleChange={onLocaleChange}
           />
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-neutral-300 hover:text-white rounded-[2px] border border-neutral-800"
+            className="p-2 text-neutral-800 dark:text-neutral-300 hover:text-black dark:hover:text-white rounded-[2px] border border-neutral-300 dark:border-neutral-800"
             aria-label="Abrir Menú de Navegación"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -122,7 +123,7 @@ export const SmartHeader: React.FC<SmartHeaderProps> = ({
 
       {/* Menu Desplegable Movil */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-[#080A0A] border-b border-neutral-800 px-6 py-6 flex flex-col gap-4 animate-fadeIn">
+        <div className="lg:hidden bg-[#F8F8F6] dark:bg-[#080A0A] border-b border-neutral-200 dark:border-neutral-800 px-6 py-6 flex flex-col gap-4 animate-fadeIn">
           <NavItem
             label={t.cybersecurity}
             href="/cybersecurity"
@@ -141,7 +142,7 @@ export const SmartHeader: React.FC<SmartHeaderProps> = ({
             divisionColor="infra"
             className="w-full py-2"
           />
-          <div className="h-[1px] bg-neutral-800 my-1" />
+          <div className="h-[1px] bg-neutral-200 dark:bg-neutral-800 my-1" />
           <NavItem
             label={t.us}
             href="#nosotros"

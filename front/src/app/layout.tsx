@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Lora, Poppins } from "next/font/google";
+import { ThemeProvider } from "@/context/ThemeContext";
 import "./globals.css";
 
 const lora = Lora({
@@ -32,9 +33,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" className={`${lora.variable} ${poppins.variable} scroll-smooth`}>
-      <body className="bg-[#080A0A] text-[#FFFFFF] antialiased selection:bg-[#A98242] selection:text-[#080A0A]">
-        {children}
+    <html lang="es" suppressHydrationWarning className={`${lora.variable} ${poppins.variable} scroll-smooth`}>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                const t = localStorage.getItem('lessso-theme');
+                if (t === 'dark') {
+                  document.documentElement.classList.add('dark');
+                  document.documentElement.setAttribute('data-theme', 'dark');
+                } else {
+                  document.documentElement.classList.remove('dark');
+                  document.documentElement.setAttribute('data-theme', 'light');
+                }
+              } catch (_) {}
+            `,
+          }}
+        />
+      </head>
+      <body className="bg-[#F8F8F6] text-[#080A0A] dark:bg-[#080A0A] dark:text-[#F8F8F6] antialiased selection:bg-[#A98242] selection:text-[#080A0A] transition-colors duration-200">
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );
