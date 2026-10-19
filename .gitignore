@@ -15,6 +15,7 @@ dist/
 build/
 .next/
 out/
+*.tsbuildinfo
 
 # Logs del sistema
 npm-debug.log*
@@ -26,10 +27,7 @@ pnpm-debug.log*
 # Datos persistentes locales de docker
 lessso_npm_data/
 lessso_npm_letsencrypt/
-lessso_pgdata/
 lessso_redisdata/
-lessso_twenty_data/
-lessso_twenty_pgdata/
 
 # IDE y sistema operativo
 .DS_Store

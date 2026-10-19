@@ -35,36 +35,6 @@ services:
       start_period: 30s
 
   # ----------------------------------------------------------------------------
-  # BASE DE DATOS PRINCIPAL: PostgreSQL 16 Alpine
-  # ----------------------------------------------------------------------------
-  lessso-db:
-    image: postgres:16-alpine
-    container_name: lessso-db
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-lessso_admin}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-lessso_secure_db_password_change_me}
-      POSTGRES_DB: ${POSTGRES_DB:-lessso_production}
-    ports:
-      - "${PORT_DATABASE:-5432}:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-      - ./docker/scripts/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
-    networks:
-      - lessso-network
-    deploy:
-      resources:
-        limits:
-          cpus: "1.00"
-          memory: 512M
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-lessso_admin} -d ${POSTGRES_DB:-lessso_production}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 15s
-
-  # ----------------------------------------------------------------------------
   # SERVICIO DE CACHE Y CONTROL DE FRECUENCIA: Redis 7 Alpine
   # ----------------------------------------------------------------------------
   lessso-redis:
@@ -98,7 +68,7 @@ services:
       start_period: 10s
 
   # ----------------------------------------------------------------------------
-  # SERVIDOR API BACKEND: Fastify + TypeScript + Drizzle ORM
+  # SERVIDOR API BACKEND: Fastify + TypeScript (Validador Atomico y Filtro)
   # ----------------------------------------------------------------------------
   lessso-back:
     build:
@@ -110,18 +80,14 @@ services:
       NODE_ENV: ${NODE_ENV:-production}
       PORT: ${PORT_BACKEND:-4000}
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
-      DATABASE_URL: ${DATABASE_URL:-postgresql://lessso_admin:lessso_secure_db_password_change_me@lessso-db:5432/lessso_production}
       REDIS_URL: ${REDIS_URL:-redis://:lessso_redis_secure_password_change_me@lessso-redis:6379}
-      TWENTY_API_URL: ${TWENTY_API_URL:-}
-      TWENTY_API_KEY: ${TWENTY_API_KEY:-}
       COOLDOWN_SECONDS: ${COOLDOWN_SECONDS:-90}
       HONEYPOT_FIELD_NAME: ${HONEYPOT_FIELD_NAME:-website_verification_code}
       OFFICIAL_CONTACT_EMAIL: ${OFFICIAL_CONTACT_EMAIL:-contacto@lessso.com}
+      WHATSAPP_PHONE_NUMBER: ${WHATSAPP_PHONE_NUMBER:-000000000000}
     ports:
       - "${PORT_BACKEND:-4000}:4000"
     depends_on:
-      lessso-db:
-        condition: service_healthy
       lessso-redis:
         condition: service_healthy
     networks:
@@ -151,6 +117,7 @@ services:
       NODE_ENV: ${NODE_ENV:-production}
       PORT: ${PORT_FRONTEND:-3000}
       NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:-http://localhost:4000}
+      NEXT_PUBLIC_WHATSAPP_NUMBER: ${NEXT_PUBLIC_WHATSAPP_NUMBER:-000000000000}
     ports:
       - "${PORT_FRONTEND:-3000}:3000"
     depends_on:
@@ -179,7 +146,5 @@ volumes:
     name: lessso_npm_data
   npm_letsencrypt:
     name: lessso_npm_letsencrypt
-  pgdata:
-    name: lessso_pgdata
   redisdata:
     name: lessso_redisdata

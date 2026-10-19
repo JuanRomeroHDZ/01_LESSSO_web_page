@@ -16,7 +16,7 @@ export const SITE_CONFIG = {
     // Telefono corporativo oficial (temporal para reemplazo)
     displayPhone: "+52 (55) 0000-0000",
     // Numero de WhatsApp en formato internacional sin espacios ni simbolos
-    whatsappNumber: "5215500000000",
+    whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "000000000000",
     // Direccion fiscal y oficinas fisicas (temporal para reemplazo en produccion)
     address: {
       street: "Paseo de la Reforma 222, Piso 18",
@@ -147,8 +147,8 @@ export const SITE_CONTENT = {
         },
         phone: {
           label: "Teléfono / WhatsApp",
-          placeholder: "55 1234 5678",
-          helper: "10 dígitos numéricos",
+          placeholder: "0000000000",
+          helper: "10 dígitos local, hasta 15 con lada",
         },
         area: {
           label: "Área de Interés Principal",
@@ -346,8 +346,8 @@ export const SITE_CONTENT = {
         },
         phone: {
           label: "Phone / WhatsApp",
-          placeholder: "55 1234 5678",
-          helper: "10 numeric digits",
+          placeholder: "0000000000",
+          helper: "10 digits local, up to 15 with country code",
         },
         area: {
           label: "Primary Area of Interest",

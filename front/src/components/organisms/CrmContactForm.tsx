@@ -19,6 +19,7 @@ import { EntitySwitch } from "@/components/molecules/EntitySwitch";
 import { FormField } from "@/components/molecules/FormField";
 import { CooldownTimer } from "@/components/molecules/CooldownTimer";
 import { WhatsAppButton } from "@/components/molecules/WhatsAppButton";
+import { buildStructuredWhatsAppUrl } from "@/hooks/useDynamicWhatsApp";
 import { CheckCircle2, ShieldAlert } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DiagonalLightRays } from "@/components/atoms/DiagonalLightRays";
@@ -43,9 +44,9 @@ const countryDialingCodes = [
 
 /**
  * Componente Organismo CrmContactForm
- * Formulario reactivo y seguro que alimenta Twenty CRM y respalda en PostgreSQL.
+ * Formulario reactivo y blindado de contacto tecnico con canal directo a WhatsApp.
  * Cuenta con conmutador Persona / Empresa, Cooldown de 90 segundos con barra dorada,
- * validacion doble con Zod, trampa Honeypot y boton editorial de WhatsApp.
+ * validacion perimetral anti-SQLi/XSS, trampa Honeypot y boton editorial de WhatsApp.
  */
 export const CrmContactForm: React.FC<CrmContactFormProps> = ({
   currentLocale,
@@ -128,12 +129,38 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({
       if (response.success) {
         setSubmissionSuccess(true);
         startCooldown(response.data?.cooldownSeconds || 90);
+
+        // Generar enlace estructurado y abrir canal directo de WhatsApp
+        const waUrl = buildStructuredWhatsAppUrl({
+          entityType: data.entityType,
+          fullName: data.fullName,
+          email: data.email,
+          countryCode: data.countryCode,
+          phoneNumber: data.phoneNumber,
+          areaOfInterest: data.areaOfInterest,
+          projectDetails: data.projectDetails,
+          companyName: data.companyName,
+          jobTitle: data.jobTitle,
+          companySize: data.companySize,
+          urgencyLevel: data.urgencyLevel,
+          estimatedBudget: data.estimatedBudget,
+        });
+
+        if (typeof window !== "undefined") {
+          window.open(waUrl, "_blank", "noopener,noreferrer");
+        }
+
         reset({
           entityType: selectedEntity,
           countryCode: "+52",
           termsAccepted: false,
           website_verification_code: "",
           projectDetails: "",
+          phoneNumber: "",
+          fullName: "",
+          email: "",
+          companyName: "",
+          jobTitle: "",
         });
       } else {
         if (response.remainingSeconds && response.remainingSeconds > 0) {
@@ -254,6 +281,7 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({
                 type="text"
                 tabIndex={-1}
                 autoComplete="off"
+                maxLength={50}
                 {...register("website_verification_code")}
               />
             </div>
@@ -266,6 +294,7 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({
                 error={errors.fullName?.message}
               >
                 <Input
+                  maxLength={80}
                   placeholder={t.fields.fullName.placeholder}
                   hasError={!!errors.fullName}
                   {...register("fullName")}
@@ -279,6 +308,7 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({
               >
                 <Input
                   type="email"
+                  maxLength={100}
                   placeholder={t.fields.email.placeholder}
                   hasError={!!errors.email}
                   {...register("email")}
@@ -314,8 +344,8 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({
                   <div className="w-2/3">
                     <Input
                       type="tel"
-                      maxLength={10}
-                      placeholder={t.fields.phone.placeholder}
+                      maxLength={15}
+                      placeholder={t.fields.phone.placeholder || "0000000000"}
                       hasError={!!errors.phoneNumber}
                       {...register("phoneNumber")}
                     />
@@ -357,6 +387,7 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({
                     error={errors.companyName?.message}
                   >
                     <Input
+                      maxLength={100}
                       placeholder={t.fields.companyName.placeholder}
                       hasError={!!errors.companyName}
                       {...register("companyName")}
@@ -368,6 +399,7 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({
                     error={errors.jobTitle?.message}
                   >
                     <Input
+                      maxLength={100}
                       placeholder={t.fields.jobTitle.placeholder}
                       hasError={!!errors.jobTitle}
                       {...register("jobTitle")}

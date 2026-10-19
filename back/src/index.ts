@@ -12,6 +12,8 @@ async function bootstrap() {
       level: env.NODE_ENV === "development" ? "info" : "warn",
     },
     trustProxy: true,
+    // Limite maximo estricto de 10kb para mitigar DoS y agotamiento de memoria por payloads masivos
+    bodyLimit: 10240,
   });
 
   // 1. Registro de cabeceras de seguridad y CORS
@@ -40,7 +42,7 @@ async function bootstrap() {
     });
     console.info(`[LESSSO_API] Servidor activo escuchando en ${address}`);
     console.info(`[LESSSO_API] Endpoint de diagnostico: ${address}/api/v1/health`);
-    console.info(`[LESSSO_API] Endpoint de captacion: ${address}/api/v1/leads`);
+    console.info(`[LESSSO_API] Endpoint de captacion y validacion: ${address}/api/v1/leads`);
   } catch (err) {
     server.log.error(err);
     process.exit(1);

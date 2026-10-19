@@ -23,7 +23,7 @@ export default function HomePage() {
           {/* Seccion Nosotros (Los 3 Pilares de Confianza) */}
           <TrustPillarsSection currentLocale={currentLocale} />
 
-          {/* Seccion Contacto (Formulario Avanzado para Twenty CRM) */}
+          {/* Seccion Contacto (Formulario Tecnico Avanzado) */}
           <CrmContactForm currentLocale={currentLocale} />
         </>
       )}

@@ -1,7 +1,7 @@
 {
   "name": "@lessso/back",
   "version": "1.0.0",
-  "description": "Servidor API Backend de LESSSO con validacion Zod, mitigacion anti-spam y conector Twenty CRM",
+  "description": "Servidor API Backend de LESSSO con validacion Zod, filtro de seguridad y mitigacion anti-spam",
   "main": "dist/index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
@@ -14,12 +14,10 @@
     "dotenv": "^16.4.5",
     "fastify": "^4.26.2",
     "ioredis": "^5.4.1",
-    "pg": "^8.11.5",
     "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/node": "^20.12.7",
-    "@types/pg": "^8.11.5",
     "tsx": "^4.7.2",
     "typescript": "^5.4.5"
   }

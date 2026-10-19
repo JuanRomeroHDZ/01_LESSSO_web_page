@@ -11,24 +11,17 @@ WORKDIR /app
 # Instalar herramientas requeridas para modulos nativos si fueran necesarios
 RUN apk add --no-cache libc6-compat
 
-# Copiar archivos de definicion de paquetes
-COPY db/package*.json ./db/
+# Copiar archivos de definicion de paquetes del backend
 COPY back/package*.json ./back/
 
-# Instalar dependencias en ambas capas
-WORKDIR /app/db
-RUN npm ci
-
+# Instalar dependencias
 WORKDIR /app/back
 RUN npm ci
 
-# Copiar codigo fuente
-WORKDIR /app
-COPY db ./db
-COPY back ./back
+# Copiar codigo fuente del backend
+COPY back ./
 
 # Compilar TypeScript en /back
-WORKDIR /app/back
 RUN npm run build
 
 # Podar dependencias de desarrollo para reducir tamano de imagen
@@ -55,7 +48,6 @@ RUN apk add --no-cache wget
 COPY --from=builder /app/back/package*.json ./
 COPY --from=builder /app/back/node_modules ./node_modules
 COPY --from=builder /app/back/dist ./dist
-COPY --from=builder /app/db ./db
 
 USER lessso
 

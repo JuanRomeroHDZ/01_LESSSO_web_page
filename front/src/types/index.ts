@@ -56,6 +56,7 @@ export interface ApiResponse<T = unknown> {
 }
 
 export interface LeadSubmissionResult {
-  leadId: string;
+  leadId?: string;
+  validated?: boolean;
   cooldownSeconds: number;
 }
