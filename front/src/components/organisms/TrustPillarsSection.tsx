@@ -36,12 +36,12 @@ export const TrustPillarsSection: React.FC<TrustPillarsSectionProps> = ({
         <div className="max-w-6xl mx-auto">
           {/* Encabezado de Seccion */}
           <div className="flex flex-col items-start mb-16">
-            <span className="font-sans text-xs uppercase tracking-[0.25em] text-[#A98242] mb-3 font-semibold">
+            <span className="font-sans text-xs uppercase tracking-[0.25em] text-[#76591F] dark:text-[#C9A66B] mb-3 font-semibold">
               {t.sectionBadge}
             </span>
             <Heading as="h2" size="xl" className="font-normal max-w-3xl text-[#080A0A] dark:text-[#FFFFFF]">
               {t.sectionTitle}{" "}
-              <span className="font-serif italic font-normal text-[#A98242]">
+              <span className="font-serif italic font-normal text-[#76591F] dark:text-[#C9A66B]">
                 {t.sectionTitleBrand}
               </span>
             </Heading>
@@ -54,7 +54,7 @@ export const TrustPillarsSection: React.FC<TrustPillarsSectionProps> = ({
               <span className="font-serif text-6xl text-[#A98242]/35 font-light mb-2">
                 {t.pillar1.number}
               </span>
-              <span className="font-sans text-xs uppercase tracking-widest text-[#A98242] mb-4 font-semibold">
+              <span className="font-sans text-xs uppercase tracking-widest text-[#76591F] dark:text-[#C9A66B] mb-4 font-semibold">
                 {t.pillar1.label}
               </span>
               <Heading as="h3" size="lg" className="text-[#080A0A] dark:text-[#FFFFFF] mb-6">
@@ -92,7 +92,7 @@ export const TrustPillarsSection: React.FC<TrustPillarsSectionProps> = ({
             <span className="font-serif text-6xl text-[#A98242]/35 font-light mb-2">
               {t.pillar2.number}
             </span>
-            <span className="font-sans text-xs uppercase tracking-widest text-[#A98242] mb-3 font-semibold">
+            <span className="font-sans text-xs uppercase tracking-widest text-[#76591F] dark:text-[#C9A66B] mb-3 font-semibold">
               {t.pillar2.label}
             </span>
             <Heading as="h3" size="xl" className="text-[#080A0A] dark:text-[#FFFFFF]">
@@ -104,7 +104,7 @@ export const TrustPillarsSection: React.FC<TrustPillarsSectionProps> = ({
             {/* Bloque Mision */}
             <div className="p-8 md:p-12 bg-[#FFFFFF] dark:bg-[#0D1010] border border-neutral-200 dark:border-[#A98242]/30 rounded-[3px] flex flex-col justify-between shadow-sm">
               <div>
-                <span className="inline-block px-3 py-1 bg-neutral-100 dark:bg-neutral-900 text-[#A98242] text-[11px] font-sans tracking-widest uppercase rounded-[2px] mb-6 font-semibold">
+                <span className="inline-block px-3 py-1 bg-neutral-100 dark:bg-neutral-900 text-[#76591F] dark:text-[#C9A66B] text-[11px] font-sans tracking-widest uppercase rounded-[2px] mb-6 font-semibold">
                   {t.pillar2.missionCard.tag}
                 </span>
                 <Heading as="h4" size="md" className="text-[#080A0A] dark:text-[#FFFFFF] mb-4 font-normal">
@@ -147,7 +147,7 @@ export const TrustPillarsSection: React.FC<TrustPillarsSectionProps> = ({
             <span className="font-serif text-6xl text-[#A98242]/35 font-light mb-2">
               {t.pillar3.number}
             </span>
-            <span className="font-sans text-xs uppercase tracking-widest text-[#A98242] mb-3 font-semibold">
+            <span className="font-sans text-xs uppercase tracking-widest text-[#76591F] dark:text-[#C9A66B] mb-3 font-semibold">
               {t.pillar3.label}
             </span>
             <Heading as="h3" size="xl" className="text-[#080A0A] dark:text-[#FFFFFF]">
@@ -161,7 +161,7 @@ export const TrustPillarsSection: React.FC<TrustPillarsSectionProps> = ({
             <div className="p-8 bg-[#FFFFFF] dark:bg-[#0D1010] border border-neutral-200 dark:border-neutral-800 rounded-[3px] shadow-sm flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-6">
-                  <span className="font-mono text-sm text-[#A98242] font-semibold">
+                  <span className="font-mono text-sm text-[#76591F] dark:text-[#C9A66B] font-semibold">
                     01
                   </span>
                   <Search className="w-5 h-5 text-[#A98242]" />
@@ -179,7 +179,7 @@ export const TrustPillarsSection: React.FC<TrustPillarsSectionProps> = ({
             <div className="p-8 bg-[#FFFFFF] dark:bg-[#0D1010] border border-neutral-200 dark:border-neutral-800 rounded-[3px] shadow-sm flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-6">
-                  <span className="font-mono text-sm text-[#A98242] font-semibold">
+                  <span className="font-mono text-sm text-[#76591F] dark:text-[#C9A66B] font-semibold">
                     02
                   </span>
                   <Compass className="w-5 h-5 text-[#A98242]" />
@@ -197,7 +197,7 @@ export const TrustPillarsSection: React.FC<TrustPillarsSectionProps> = ({
             <div className="p-8 bg-[#FFFFFF] dark:bg-[#0D1010] border border-neutral-200 dark:border-neutral-800 rounded-[3px] shadow-sm flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-6">
-                  <span className="font-mono text-sm text-[#A98242] font-semibold">
+                  <span className="font-mono text-sm text-[#76591F] dark:text-[#C9A66B] font-semibold">
                     03
                   </span>
                   <Activity className="w-5 h-5 text-[#A98242]" />

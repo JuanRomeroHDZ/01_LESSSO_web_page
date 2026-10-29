@@ -1,6 +1,7 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import { corsOptions } from "./config/cors";
+import { env } from "./config/env";
 import { registerSecurityMiddlewares } from "./middlewares/security.middleware";
 import { leadRoutes } from "./routes/lead.routes";
 import { healthRoutes } from "./routes/health.routes";
@@ -181,7 +182,10 @@ async function runSecurityTestSuite() {
 
   await registerSecurityMiddlewares(server);
   await server.register(cors, corsOptions);
-  await server.register(leadRoutes, { prefix: "/api/v1" });
+  let delivered = 0;
+  await server.register(leadRoutes, { prefix: "/api/v1", deliver: async () => { delivered++; } });
+  await server.register(leadRoutes, { prefix: "/api/fail", deliver: async () => { throw new Error("SMTP unavailable"); } });
+  await server.register(leadRoutes, { prefix: "/api/disabled" });
   await server.register(healthRoutes, { prefix: "/api/v1" });
 
   const validLeadPayload = {
@@ -195,6 +199,27 @@ async function runSecurityTestSuite() {
     termsAccepted: true,
   };
 
+  const allowedOrigin = await server.inject({ method: "OPTIONS", url: "/api/v1/leads", headers: { origin: env.FRONTEND_URL, "access-control-request-method": "POST" } });
+  assert(allowedOrigin.headers["access-control-allow-origin"] === env.FRONTEND_URL, "CORS permite el origen configurado");
+  const otherOrigin = await server.inject({ method: "OPTIONS", url: "/api/v1/leads", headers: { origin: "https://sitio-no-autorizado.example", "access-control-request-method": "POST" } });
+  assert(!otherOrigin.headers["access-control-allow-origin"], "CORS no autoriza otros orígenes");
+
+  assert(leadInputSchema.safeParse({ ...validLeadPayload, fullName: "María O'Connor" }).success, "Los nombres válidos con apóstrofo se aceptan");
+  assert(!leadInputSchema.safeParse({ ...validLeadPayload, fullName: "   " }).success, "Un nombre vacío tras quitar espacios se rechaza");
+
+  const malformedEmail = await server.inject({
+    method: "POST",
+    url: "/api/v1/leads",
+    remoteAddress: "198.51.100.41",
+    payload: { ...validLeadPayload, email: { value: "invalid" } },
+  });
+  assert(malformedEmail.statusCode === 400, "Un correo con tipo inválido se rechaza sin error interno");
+
+  const disabled = await server.inject({ method: "POST", url: "/api/disabled/leads", remoteAddress: "198.51.100.40", payload: validLeadPayload });
+  assert(disabled.statusCode === 503, "El formulario desactivado no finge enviar correo");
+  const failed = await server.inject({ method: "POST", url: "/api/fail/leads", remoteAddress: "198.51.100.39", payload: validLeadPayload });
+  assert(failed.statusCode === 500, "Un fallo SMTP no se comunica como envío exitoso");
+
   // Test 4.1: Envio inicial valido -> Debe responder 200 OK
   const res1 = await server.inject({
     method: "POST",
@@ -203,7 +228,7 @@ async function runSecurityTestSuite() {
     payload: validLeadPayload,
   });
   const body1 = JSON.parse(res1.body);
-  assert(res1.statusCode === 200 && body1.success === true, "Envio valido inicial responde HTTP 200 OK y confirmacion");
+  assert(res1.statusCode === 200 && body1.success === true && delivered === 1, "Envio valido confirma solamente después de entregar el correo");
 
   // Test 4.2: Segundo envio inmediato desde misma IP -> Debe bloquearse por COOLDOWN (HTTP 429)
   const res2 = await server.inject({
@@ -217,6 +242,15 @@ async function runSecurityTestSuite() {
     res2.statusCode === 429 && body2.error === "COOLDOWN_ACTIVE",
     `Segundo envio inmediato bloqueado por Cooldown: HTTP 429 (${body2.message})`
   );
+
+  // Las solicitudes simultáneas no deben saltarse el tiempo de espera.
+  const concurrentPayload = { ...validLeadPayload, email: "concurrente@empresa.com" };
+  const simultaneous = await Promise.all([0, 1].map(() => server.inject({
+    method: "POST", url: "/api/v1/leads", remoteAddress: "198.51.100.50", payload: concurrentPayload,
+  })));
+  assert(simultaneous.filter((response) => response.statusCode === 200).length === 1 &&
+    simultaneous.filter((response) => response.statusCode === 429).length === 1,
+    "Las solicitudes simultáneas respetan el tiempo de espera");
 
   // Test 4.3: Trampa Honeypot con robot spammer
   const botPayload = {

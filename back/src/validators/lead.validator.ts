@@ -91,7 +91,7 @@ export function sanitizeInput(input: string): string {
 /**
  * Expresion regular para nombres validos (letras latinas, tildes, dieresis, espacios, puntos y guiones)
  */
-const nameRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s.-]+$/;
+const nameRegex = /^[\p{L}\p{M}\s.'’\-]+$/u;
 
 /**
  * Expresion regular para validar telefono numerico estricto (minimo 10, maximo 15 digitos)
@@ -109,10 +109,7 @@ export const leadInputSchema = z
       .trim()
       .min(3, "El nombre completo debe tener al menos 3 caracteres")
       .max(80, "El nombre no puede exceder 80 caracteres")
-      .regex(nameRegex, "El nombre solo puede contener letras, espacios, puntos o guiones")
-      .refine((val) => !val.includes("'") && !val.includes('"'), {
-        message: "No se permiten comillas en el nombre",
-      })
+      .regex(nameRegex, "El nombre solo puede contener letras, espacios, puntos, guiones o apóstrofos")
       .refine((val) => !containsSqlInjection(val), {
         message: "Se detectaron patrones no permitidos (SQLi) en el nombre",
       })
@@ -146,7 +143,7 @@ export const leadInputSchema = z
         "Consultoría Integral",
       ],
       {
-        errorMap: () => ({ message: "Debe seleccionar un area de interes valida" }),
+        error: "Debe seleccionar un area de interes valida",
       }
     ),
     projectDetails: z
@@ -170,9 +167,6 @@ export const leadInputSchema = z
       .string()
       .trim()
       .max(100, "El nombre de la empresa no puede exceder 100 caracteres")
-      .refine((val) => !val || (!val.includes("'") && !val.includes('"')), {
-        message: "No se permiten comillas en el nombre de empresa",
-      })
       .refine((val) => !val || !containsSqlInjection(val), {
         message: "Se detectaron patrones no permitidos (SQLi) en el nombre de la empresa",
       })
@@ -184,9 +178,6 @@ export const leadInputSchema = z
       .string()
       .trim()
       .max(100, "El puesto no puede exceder 100 caracteres")
-      .refine((val) => !val || (!val.includes("'") && !val.includes('"')), {
-        message: "No se permiten comillas en el puesto",
-      })
       .refine((val) => !val || !containsSqlInjection(val), {
         message: "Se detectaron patrones no permitidos (SQLi) en el puesto",
       })

@@ -11,7 +11,7 @@ async function bootstrap() {
     logger: {
       level: env.NODE_ENV === "development" ? "info" : "warn",
     },
-    trustProxy: true,
+    trustProxy: env.TRUSTED_PROXY_IPS.length ? env.TRUSTED_PROXY_IPS : false,
     // Limite maximo estricto de 10kb para mitigar DoS y agotamiento de memoria por payloads masivos
     bodyLimit: 10240,
   });
@@ -27,10 +27,12 @@ async function bootstrap() {
   // 3. Manejador de errores global seguro
   server.setErrorHandler((error, request, reply) => {
     server.log.error(error);
-    reply.status(error.statusCode || 500).send({
-      statusCode: error.statusCode || 500,
-      error: error.name || "SERVER_ERROR",
-      message: error.message || "Ocurrio un error interno en el servidor.",
+    const safeError = error as { statusCode?: number; name?: string; message?: string };
+    const statusCode = safeError.statusCode || 500;
+    reply.status(statusCode).send({
+      statusCode,
+      error: safeError.name || "SERVER_ERROR",
+      message: statusCode >= 500 ? "Ocurrió un error interno en el servidor." : safeError.message,
     });
   });
 

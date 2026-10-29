@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 
 export interface FormFieldProps {
   label: string;
+  htmlFor?: string;
   error?: string;
   required?: boolean;
   helper?: string;
@@ -22,6 +23,7 @@ export interface FormFieldProps {
  */
 export const FormField: React.FC<FormFieldProps> = ({
   label,
+  htmlFor,
   error,
   required = false,
   helper,
@@ -32,7 +34,7 @@ export const FormField: React.FC<FormFieldProps> = ({
   return (
     <div className={cn("flex flex-col gap-1.5 w-full", className)}>
       <div className="flex items-center justify-between text-xs font-sans tracking-wider">
-        <label className="text-neutral-300 font-light uppercase">
+        <label htmlFor={htmlFor} className="text-neutral-700 dark:text-neutral-300 font-light uppercase">
           {label} {required && <span className="text-[#A98242]">*</span>}
         </label>
         {charCount && (
@@ -54,11 +56,11 @@ export const FormField: React.FC<FormFieldProps> = ({
       <div className="relative">{children}</div>
 
       {helper && !error && (
-        <span className="text-[11px] text-neutral-400 font-light">{helper}</span>
+        <span className="text-[11px] text-neutral-600 dark:text-neutral-400 font-light">{helper}</span>
       )}
 
       {error && (
-        <span className="flex items-center gap-1.5 text-xs text-red-400 font-light mt-0.5 animate-fadeIn">
+        <span className="flex items-center gap-1.5 text-xs text-red-700 dark:text-red-400 font-light mt-0.5 animate-fadeIn">
           <AlertCircle className="w-3.5 h-3.5 shrink-0" />
           <span>{error}</span>
         </span>

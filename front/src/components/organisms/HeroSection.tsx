@@ -53,7 +53,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ currentLocale }) => {
             {/* Pre-titulo arquitectonico */}
             <div className="flex items-center gap-3 mb-6">
               <div className="w-8 h-[1px] bg-[#A98242]" />
-              <span className="font-sans text-xs uppercase tracking-[0.25em] text-[#A98242] font-medium">
+              <span className="font-sans text-xs uppercase tracking-[0.25em] text-[#76591F] dark:text-[#C9A66B] font-medium">
                 {t.pretitle}
               </span>
             </div>
@@ -101,15 +101,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ currentLocale }) => {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-12 mt-10 border-t border-neutral-200 dark:border-neutral-900 w-full text-xs font-sans text-neutral-600 dark:text-neutral-400">
               <div className="flex items-center gap-3">
                 <Shield className="w-4 h-4 text-[#A98242] shrink-0" />
-                <span className="font-light tracking-wide">Blindaje de Infraestructura</span>
+                <span className="font-light tracking-wide">{currentLocale === "es" ? "Ciberseguridad" : "Cybersecurity"}</span>
               </div>
               <div className="flex items-center gap-3">
                 <Code className="w-4 h-4 text-[#A98242] shrink-0" />
-                <span className="font-light tracking-wide">Desarrollo Crítico sin Brechas</span>
+                <span className="font-light tracking-wide">{currentLocale === "es" ? "Desarrollo de software" : "Software development"}</span>
               </div>
               <div className="flex items-center gap-3">
                 <Server className="w-4 h-4 text-[#A98242] shrink-0" />
-                <span className="font-light tracking-wide">Arquitectura Cloud Resiliente</span>
+                <span className="font-light tracking-wide">{currentLocale === "es" ? "Infraestructura tecnológica" : "Technology infrastructure"}</span>
               </div>
             </div>
           </div>

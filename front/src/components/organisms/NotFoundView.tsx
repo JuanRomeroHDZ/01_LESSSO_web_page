@@ -36,7 +36,7 @@ export const NotFoundView: React.FC = () => {
         <div className="flex items-center gap-3 mb-6">
           <span className="w-2 h-2 bg-[#A98242] rounded-[1px] animate-pulse" />
           <span className="font-mono text-xs uppercase tracking-widest text-[#A98242]">
-            ESTADO DEL SERVICIO: MODULO EN DESPLIEGUE
+            PÁGINA NO ENCONTRADA
           </span>
         </div>
 
@@ -46,13 +46,11 @@ export const NotFoundView: React.FC = () => {
         </Heading>
 
         <Heading as="h2" size="lg" className="font-normal text-[#080A0A] dark:text-[#FFFFFF] mb-6">
-          Ruta no disponible o en proceso de arquitectura
+          Esta página no está disponible
         </Heading>
 
         <Text variant="lead" className="text-neutral-600 dark:text-neutral-400 font-light leading-relaxed mb-8">
-          La división o sección que intenta consultar se encuentra actualmente bajo proceso de
-          auditoría, desarrollo de especificaciones o migración controlada. No se han detectado brechas ni
-          fallos en la infraestructura central.
+          La dirección que busca no existe o ya no está disponible. Puede regresar al inicio para seguir explorando.
         </Text>
 
         <GoldLine className="opacity-40 mb-10 max-w-sm" />

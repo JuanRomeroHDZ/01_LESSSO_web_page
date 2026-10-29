@@ -34,3 +34,9 @@ lessso_redisdata/
 *.pem
 .vscode/
 .idea/
+
+# Resultados de pruebas de navegador
+playwright-report/
+test-results/
+
+.next-test/

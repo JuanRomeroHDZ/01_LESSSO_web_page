@@ -11,7 +11,7 @@ export interface ThemeToggleProps {
 
 /**
  * Componente Atomo ThemeToggle
- * Botón cuadrado compacto con esquinas al 10% (w-9 h-9, rounded-[3px])
+ * Botón cuadrado compacto con esquinas al 10% (w-11 h-11 lg:w-9 lg:h-9, rounded-[3px])
  * Permite alternar con un clic entre Modo Normal (Blanco Hueso) y Modo Oscuro (Negro).
  * Sin emojis.
  */
@@ -27,7 +27,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ className }) => {
     return (
       <div
         className={cn(
-          "w-9 h-9 rounded-[3px] border border-neutral-300 dark:border-neutral-800 bg-[#FFFFFF] dark:bg-[#080A0A] opacity-60",
+          "w-11 h-11 lg:w-9 lg:h-9 rounded-[3px] border border-neutral-300 dark:border-neutral-800 bg-[#FFFFFF] dark:bg-[#080A0A] opacity-60",
           className
         )}
         aria-hidden="true"
@@ -42,7 +42,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ className }) => {
       type="button"
       onClick={toggleTheme}
       className={cn(
-        "w-9 h-9 flex items-center justify-center rounded-[3px] transition-all duration-300 select-none",
+        "w-11 h-11 lg:w-9 lg:h-9 flex items-center justify-center rounded-[3px] transition-all duration-300 select-none",
         "border border-neutral-300 dark:border-neutral-800 hover:border-[#A98242] dark:hover:border-[#A98242]",
         "bg-[#FFFFFF] dark:bg-[#080A0A] text-[#080A0A] dark:text-[#FFFFFF] hover:text-[#A98242] dark:hover:text-[#A98242]",
         "shadow-sm active:scale-95",

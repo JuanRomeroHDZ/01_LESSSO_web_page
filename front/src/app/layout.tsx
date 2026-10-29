@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Lora, Poppins } from "next/font/google";
+import { getSiteUrl } from "@/lib/site-url";
 import { ThemeProvider } from "@/context/ThemeContext";
 import "./globals.css";
 
@@ -18,13 +19,23 @@ const poppins = Poppins({
   display: "swap",
 });
 
+const siteUrl = getSiteUrl();
+const description = "Servicios de ciberseguridad, desarrollo de software e infraestructura tecnológica en Tijuana. Conozca a LESSSO y hable con nuestro equipo.";
+
 export const metadata: Metadata = {
-  title: "LESSSO | Ingeniería de Precisión, Trato Humano",
-  description:
-    "Plataforma de ciberseguridad avanzada, desarrollo de software crítico y arquitectura de infraestructura resiliente para organizaciones modernas.",
-  icons: {
-    icon: "/assets/logos/lessso-gold.svg",
+  ...(siteUrl ? { metadataBase: new URL(siteUrl), alternates: { canonical: "/" } } : {}),
+  title: "LESSSO | Ciberseguridad, software e infraestructura en Tijuana",
+  description,
+  openGraph: {
+    type: "website",
+    locale: "es_MX",
+    siteName: "LESSSO",
+    title: "LESSSO | Tecnología con atención cercana",
+    description,
+    ...(siteUrl ? { url: siteUrl } : {}),
   },
+  twitter: { card: "summary", title: "LESSSO | Tecnología con atención cercana", description },
+  icons: { icon: "/assets/logos/lessso-gold.svg" },
 };
 
 export default function RootLayout({
@@ -33,7 +44,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" suppressHydrationWarning className={`${lora.variable} ${poppins.variable} scroll-smooth`}>
+    <html lang="es" data-scroll-behavior="smooth" suppressHydrationWarning className={`${lora.variable} ${poppins.variable} scroll-smooth`}>
       <head>
         <script
           dangerouslySetInnerHTML={{

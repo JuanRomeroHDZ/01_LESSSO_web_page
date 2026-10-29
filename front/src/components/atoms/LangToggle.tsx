@@ -12,7 +12,7 @@ export interface LangToggleProps {
 
 /**
  * Componente Atomo LangToggle
- * Botón cuadrado compacto con esquinas al 10% (w-9 h-9, rounded-[3px])
+ * Botón cuadrado compacto con esquinas al 10% (w-11 h-11 lg:w-9 lg:h-9, rounded-[3px])
  * Alterna entre ES y EN con un solo clic rápido.
  * Sin emojis.
  */
@@ -30,7 +30,7 @@ export const LangToggle: React.FC<LangToggleProps> = ({
       type="button"
       onClick={toggleLocale}
       className={cn(
-        "w-9 h-9 flex items-center justify-center rounded-[3px] transition-all duration-300 select-none",
+        "w-11 h-11 lg:w-9 lg:h-9 flex items-center justify-center rounded-[3px] transition-all duration-300 select-none",
         "border border-neutral-300 dark:border-neutral-800 hover:border-[#A98242] dark:hover:border-[#A98242]",
         "bg-[#FFFFFF] dark:bg-[#080A0A] text-[#080A0A] dark:text-[#FFFFFF] hover:text-[#A98242] dark:hover:text-[#A98242]",
         "font-mono text-xs font-semibold tracking-wider",
@@ -40,7 +40,7 @@ export const LangToggle: React.FC<LangToggleProps> = ({
       aria-label={`Cambiar idioma a ${currentLocale === "es" ? "Inglés" : "Español"}`}
       title={currentLocale === "es" ? "Switch to English" : "Cambiar a Español"}
     >
-      <span className="text-[#A98242] font-semibold">{currentLocale.toUpperCase()}</span>
+      <span className="text-[#76591F] dark:text-[#C9A66B] font-semibold">{currentLocale.toUpperCase()}</span>
     </button>
   );
 };

@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FilmGrain } from "@/components/atoms/FilmGrain";
 import { CybersecurityHeader } from "@/components/organisms/CybersecurityHeader";
 import { CybersecurityHero } from "@/components/organisms/CybersecurityHero";
 import { CybersecurityApproachSection } from "@/components/organisms/CybersecurityApproachSection";
 import { CybersecuritySpecialtiesSection } from "@/components/organisms/CybersecuritySpecialtiesSection";
-import { CrmContactForm } from "@/components/organisms/CrmContactForm";
+import { ContactSection } from "@/components/organisms/ContactSection";
 import { Footer } from "@/components/organisms/Footer";
 import { Locale } from "@/config/site-content";
 
@@ -24,6 +24,7 @@ import { Locale } from "@/config/site-content";
  */
 export const CybersecurityView: React.FC = () => {
   const [currentLocale, setCurrentLocale] = useState<Locale>("es");
+  useEffect(() => { document.documentElement.lang = currentLocale; }, [currentLocale]);
 
   return (
     <div
@@ -48,7 +49,7 @@ export const CybersecurityView: React.FC = () => {
         <CybersecuritySpecialtiesSection currentLocale={currentLocale} />
 
         {/* Sección 03: Contacto (#contact con rayos de fondo) */}
-        <CrmContactForm
+        <ContactSection
           currentLocale={currentLocale}
           isCybersecurity={true}
           defaultArea="Ciberseguridad"

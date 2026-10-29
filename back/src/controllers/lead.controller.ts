@@ -1,7 +1,9 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { leadInputSchema } from "../validators/lead.validator";
-import { registerCooldown } from "../middlewares/cooldown.middleware";
+import { reserveCooldown } from "../middlewares/cooldown.middleware";
 import { env } from "../config/env";
+import { LeadInput } from "../validators/lead.validator";
+import { EmailUnavailableError, sendLeadEmail } from "../services/email.service";
 
 /**
  * Controlador de validacion atomica y filtro perimetral de seguridad para prospectos
@@ -9,7 +11,8 @@ import { env } from "../config/env";
  */
 export async function createLeadHandler(
   request: FastifyRequest,
-  reply: FastifyReply
+  reply: FastifyReply,
+  deliver: (lead: LeadInput) => Promise<void> = sendLeadEmail
 ): Promise<void> {
   // 1. Validacion estricta en servidor con Zod (incluye filtros anti-SQLi y anti-XSS)
   const validationResult = leadInputSchema.safeParse(request.body);
@@ -27,24 +30,36 @@ export async function createLeadHandler(
   const leadData = validationResult.data;
   const clientIp = request.ip || "unknown-ip";
 
+  const reservation = await reserveCooldown(clientIp, leadData.email);
+  if (reservation.remainingSeconds > 0) {
+    reply.status(429).send({
+      statusCode: 429,
+      error: "COOLDOWN_ACTIVE",
+      message: `Por favor espere ${reservation.remainingSeconds} segundos antes de enviar una nueva consulta.`,
+      remainingSeconds: reservation.remainingSeconds,
+    });
+    return;
+  }
   try {
-    // 2. Registro obligatorio de Cooldown de 90 segundos por IP y correo
-    await registerCooldown(clientIp, leadData.email);
+    // Nunca confirmar una consulta que el servidor de correo no aceptó.
+    await deliver(leadData);
 
     // 3. Respuesta de confirmacion exitosa para activacion de Cooldown y apertura de WhatsApp
     reply.status(200).send({
       success: true,
-      message: "Validación de seguridad completada con éxito. Redirigiendo a WhatsApp.",
+      message: "Su consulta fue enviada por correo.",
       data: {
         validated: true,
         cooldownSeconds: env.COOLDOWN_SECONDS,
       },
     });
   } catch (error) {
-    console.error("[LEAD_CONTROLLER_ERROR] Error al registrar cooldown:", (error as Error).message);
-    reply.status(500).send({
-      statusCode: 500,
-      error: "INTERNAL_SERVER_ERROR",
+    await reservation.release?.();
+    request.log.error("No fue posible enviar la consulta de contacto");
+    const statusCode = error instanceof EmailUnavailableError ? 503 : 500;
+    reply.status(statusCode).send({
+      statusCode,
+      error: statusCode === 503 ? "CONTACT_UNAVAILABLE" : "INTERNAL_SERVER_ERROR",
       message: "Ocurrió un problema temporal al procesar su solicitud. Intente nuevamente.",
     });
   }

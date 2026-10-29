@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SmartHeader } from "@/components/organisms/SmartHeader";
 import { Footer } from "@/components/organisms/Footer";
 import { FilmGrain } from "@/components/atoms/FilmGrain";
@@ -17,6 +17,7 @@ export interface PageLayoutProps {
  */
 export const PageLayout: React.FC<PageLayoutProps> = ({ children }) => {
   const [currentLocale, setCurrentLocale] = useState<Locale>("es");
+  useEffect(() => { document.documentElement.lang = currentLocale; }, [currentLocale]);
 
   return (
     <div className="min-h-screen bg-[#F8F8F6] dark:bg-[#080A0A] text-[#080A0A] dark:text-[#FFFFFF] transition-colors duration-300 flex flex-col relative selection:bg-[#A98242] selection:text-[#080A0A]">

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useId } from "react";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { cn } from "@/lib/utils";
 
 export interface DiagonalLightRaysProps {
@@ -26,6 +27,7 @@ export const DiagonalLightRays: React.FC<DiagonalLightRaysProps> = ({
   opacity = 0.65,
 }) => {
   const uniqueId = useId().replace(/:/g, "");
+  const reducedMotion = useReducedMotion();
 
   // Definición de 14 rayos distribuidos horizontalmente (en porcentajes) con duraciones y desfases escalonados
   const rays = [
@@ -50,7 +52,7 @@ export const DiagonalLightRays: React.FC<DiagonalLightRaysProps> = ({
         "pointer-events-none absolute inset-0 w-full h-full overflow-hidden select-none z-0",
         className
       )}
-      style={{ opacity }}
+      style={{ opacity: Math.min(opacity * 1.15, 1) }}
       aria-hidden="true"
     >
       <svg
@@ -115,12 +117,12 @@ export const DiagonalLightRays: React.FC<DiagonalLightRaysProps> = ({
               x2={x2}
               y2={y2}
               stroke={stroke}
-              strokeWidth={idx % 3 === 0 ? "0.9" : "0.6"}
+              strokeWidth={idx % 3 === 0 ? "1.05" : "0.7"}
               strokeDasharray="60 380"
               strokeLinecap="round"
               className={strokeClass}
             >
-              <animate
+              {!reducedMotion && <><animate
                 attributeName="stroke-dashoffset"
                 from="440"
                 to="-440"
@@ -135,7 +137,7 @@ export const DiagonalLightRays: React.FC<DiagonalLightRaysProps> = ({
                 dur={`${ray.dur}s`}
                 repeatCount="indefinite"
                 begin={`${ray.begin}s`}
-              />
+              /></>}
             </line>
           );
         })}

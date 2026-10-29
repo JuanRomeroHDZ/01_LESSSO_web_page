@@ -115,7 +115,7 @@ export function useDynamicWhatsApp(formData?: FormStateForWhatsApp) {
 
     const encodedMessage = encodeURIComponent(messageText);
     return `https://wa.me/${targetNumber}?text=${encodedMessage}`;
-  }, [formData?.fullName, formData?.companyName, formData?.areaOfInterest, formData?.projectDetails]);
+  }, [formData]);
 
   return { whatsappUrl };
 }

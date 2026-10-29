@@ -13,18 +13,9 @@ export const SITE_CONFIG = {
   // ---------------------------------------------------------------------------
   contact: {
     officialEmail: "contacto@lessso.com",
-    // Telefono corporativo oficial (temporal para reemplazo)
-    displayPhone: "+52 (55) 0000-0000",
-    // Numero de WhatsApp en formato internacional sin espacios ni simbolos
-    whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "000000000000",
-    // Direccion fiscal y oficinas fisicas (temporal para reemplazo en produccion)
-    address: {
-      street: "Paseo de la Reforma 222, Piso 18",
-      neighborhood: "Juárez, Cuauhtémoc",
-      city: "Ciudad de México",
-      postalCode: "06600",
-      country: "México",
-    },
+    displayPhone: "+52 (664) 227-6711",
+    whatsappNumber: "526642276711",
+    address: { city: "Tijuana", country: "México" },
   },
 
   // ---------------------------------------------------------------------------
@@ -58,10 +49,10 @@ export const SITE_CONTENT = {
     hero: {
       pretitle: "ARQUITECTURA DIGITAL Y CIBERSEGURIDAD",
       titleLine1: "Ingeniería tecnológica de",
-      titleLine2Italic: "precisión quirúrgica",
+      titleLine2Italic: "precisión",
       titleLine3: "con trato cercano.",
-      subtitle: "Blindamos sus operaciones, construimos software de alto rendimiento y ordenamos su infraestructura tecnológica. Menos fricción burocrática, más certidumbre técnica.",
-      ctaPrimary: "Solicitar Diagnóstico Técnico",
+      subtitle: "Protegemos sus operaciones, desarrollamos software y ayudamos a mejorar su infraestructura tecnológica con atención cercana y soluciones claras.",
+      ctaPrimary: "Solicitar diagnóstico",
       ctaSecondary: "Conocer Nuestro Método",
       scrollHint: "Desplazar para explorar",
     },
@@ -75,7 +66,7 @@ export const SITE_CONTENT = {
         number: "01",
         label: "EL PROBLEMA QUE RESOLVEMOS",
         title: "Claridad frente a la dispersión tecnológica",
-        description: "La mayoría de las organizaciones operan con infraestructuras frágiles, vulnerabilidades de seguridad desatendidas y sistemas aislados. Las firmas tradicionales suelen tratar los desafíos críticos como un número de ticket anónimo. En LESSSO operamos como su aliado técnico estratégico directo: analizamos la raíz del problema, eliminamos la incertidumbre y diseñamos soluciones robustas desde la primera línea de código.",
+        description: "Los sistemas desconectados, las dudas de seguridad y una infraestructura difícil de mantener pueden frenar el trabajo de una organización. En LESSSO escuchamos sus necesidades, analizamos el problema y proponemos soluciones claras para su equipo.",
         highlights: [
           "Diagnóstico sin jerga confusa ni sobrecostos ocultos.",
           "Trato directo con ingenieros especialistas, sin intermediarios comerciales.",
@@ -91,11 +82,11 @@ export const SITE_CONTENT = {
         missionCard: {
           tag: "MISIÓN",
           heading: "Asegurar y potenciar los activos digitales de cada cliente.",
-          text: "Diseñar, construir y proteger ecosistemas tecnológicos críticos mediante estándares de ingeniería rigurosos, garantizando que cada solución sea escalable, auditada y comprensible para el equipo del cliente.",
+          text: "Diseñar, construir y proteger sistemas tecnológicos con atención al detalle, para que las soluciones sean útiles y comprensibles para el equipo del cliente.",
         },
         visionCard: {
           tag: "VISIÓN",
-          heading: "Ser el estándar de certidumbre tecnológica en la industria.",
+          heading: "Ser un equipo de confianza para quienes necesitan soluciones tecnológicas.",
           text: "Consolidarnos como el socio de confianza preferido por empresas en crecimiento y corporativos que exigen excelencia técnica sin perder la calidez, la transparencia y el compromiso de un equipo dedicado.",
         },
       },
@@ -114,12 +105,12 @@ export const SITE_CONTENT = {
           {
             stepNumber: "02",
             title: "Arquitectura sin Sorpresas",
-            description: "Trazamos la solución modular con cronogramas estrictos, especificaciones abiertas y presupuesto cerrado. Sabrá exactamente qué se construye, cómo funciona y qué recursos requiere.",
+            description: "Definimos la solución, el alcance, los tiempos y el presupuesto junto con usted antes de comenzar el trabajo.",
           },
           {
             stepNumber: "03",
             title: "Acompañamiento Continuo",
-            description: "No entregamos un proyecto para marcharnos. Monitoreamos activamente el comportamiento de los sistemas, documentamos cada componente y capacitamos a su personal clave.",
+            description: "Documentamos lo que entregamos y acordamos con usted el acompañamiento que necesite después del proyecto.",
           },
         ],
       },
@@ -129,7 +120,7 @@ export const SITE_CONTENT = {
       sectionBadge: "INICIEMOS LA CONVERSACIÓN",
       sectionTitle: "Cuéntenos sobre su",
       sectionTitleItalic: "próximo desafío",
-      sectionSubtitle: "Complete el formulario para recibir un análisis inicial sin compromiso. Responderemos en menos de 24 horas hábiles.",
+      sectionSubtitle: "Complete el formulario para enviarnos su consulta por correo.",
       
       switch: {
         person: "Persona",
@@ -207,20 +198,20 @@ export const SITE_CONTENT = {
       },
 
       buttons: {
-        submit: "Enviar Solicitud Técnica",
+        submit: "Enviar consulta",
         submitting: "Procesando Solicitud...",
         whatsappDefault: "Iniciar Conversación en WhatsApp",
       },
 
       cooldown: {
         activeTitle: "Periodo de espera activo",
-        activeMessage: "Su solicitud previa fue recibida correctamente. Para evitar duplicidades, el formulario se reactivará en:",
+        activeMessage: "Para evitar solicitudes repetidas, podrá volver a enviar el formulario en:",
         secondsLabel: "segundos",
       },
 
       feedback: {
-        successHeading: "Solicitud Recibida con Éxito",
-        successText: "Hemos registrado sus datos en nuestro sistema seguro. Un especialista técnico se pondrá en contacto con usted en menos de 24 horas hábiles.",
+        successHeading: "Consulta enviada",
+        successText: "Su consulta fue enviada. Nos pondremos en contacto con usted.",
       },
     },
 
@@ -266,10 +257,10 @@ export const SITE_CONTENT = {
     hero: {
       pretitle: "DIGITAL ARCHITECTURE AND CYBERSECURITY",
       titleLine1: "Technological engineering of",
-      titleLine2Italic: "surgical precision",
+      titleLine2Italic: "precision",
       titleLine3: "with direct human focus.",
       subtitle: "We safeguard your operations, build high-performance software, and streamline technical infrastructure. Less corporate friction, greater technical certainty.",
-      ctaPrimary: "Request Technical Assessment",
+      ctaPrimary: "Request an Assessment",
       ctaSecondary: "Explore Our Method",
       scrollHint: "Scroll to explore",
     },
@@ -281,7 +272,7 @@ export const SITE_CONTENT = {
         number: "01",
         label: "THE PROBLEM WE SOLVE",
         title: "Clarity amidst technological dispersion",
-        description: "Most organizations operate with vulnerable infrastructure, unattended security exposures, and disconnected systems. Traditional consulting firms treat critical issues like anonymous ticket numbers. At LESSSO we act as your direct strategic technical partner.",
+        description: "Disconnected systems, security concerns, and infrastructure that is difficult to maintain can slow an organization down. We listen to your needs, examine the problem, and propose clear solutions for your team.",
         highlights: [
           "Assessment with zero confusing jargon or hidden fees.",
           "Direct dialogue with senior engineers, no sales intermediaries.",
@@ -295,11 +286,11 @@ export const SITE_CONTENT = {
         missionCard: {
           tag: "MISSION",
           heading: "Protect and empower every client's digital assets.",
-          text: "Design, engineer, and defend critical systems through uncompromising standards, ensuring every solution is scalable, audited, and fully transparent.",
+          text: "Design, build, and protect technology with care, creating solutions that are useful and understandable to our clients.",
         },
         visionCard: {
           tag: "VISION",
-          heading: "Set the benchmark for technical certainty across the industry.",
+          heading: "Become a trusted team for people who need technology solutions.",
           text: "Become the preferred strategic partner for growing enterprises requiring technical rigor without sacrificing clarity and personal dedication.",
         },
       },
@@ -316,12 +307,12 @@ export const SITE_CONTENT = {
           {
             stepNumber: "02",
             title: "Zero-Surprise Architecture",
-            description: "We design modular solutions with defined timelines, open standards, and fixed budgets.",
+            description: "We define the solution, scope, timeline, and budget with you before work begins.",
           },
           {
             stepNumber: "03",
             title: "Continuous Partnership",
-            description: "We monitor system health actively, document every component, and empower your internal technical leads.",
+            description: "We document what we deliver and agree on the support you need after the project.",
           },
         ],
       },
@@ -330,7 +321,7 @@ export const SITE_CONTENT = {
       sectionBadge: "START THE CONVERSATION",
       sectionTitle: "Tell us about your",
       sectionTitleItalic: "upcoming challenge",
-      sectionSubtitle: "Fill out the form for an initial consultation. We will respond within 24 business hours.",
+      sectionSubtitle: "Complete the form to send us your inquiry by email.",
       switch: {
         person: "Individual",
         company: "Company",
@@ -405,18 +396,18 @@ export const SITE_CONTENT = {
         },
       },
       buttons: {
-        submit: "Submit Technical Request",
+        submit: "Send inquiry",
         submitting: "Processing Request...",
         whatsappDefault: "Start Conversation on WhatsApp",
       },
       cooldown: {
         activeTitle: "Active cooldown period",
-        activeMessage: "Your previous request was received. To prevent duplicates, the form will reactivate in:",
+        activeMessage: "To prevent repeated requests, you can submit the form again in:",
         secondsLabel: "seconds",
       },
       feedback: {
-        successHeading: "Request Successfully Received",
-        successText: "Your details have been securely recorded. A technical specialist will contact you within 24 business hours.",
+        successHeading: "Inquiry sent",
+        successText: "Your inquiry has been sent. We will get in touch with you.",
       },
     },
     footer: {

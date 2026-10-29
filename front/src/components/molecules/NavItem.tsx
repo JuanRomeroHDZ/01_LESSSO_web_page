@@ -8,6 +8,7 @@ export interface NavItemProps {
   divisionColor?: "cyber" | "software" | "infra";
   isScrollLink?: boolean;
   className?: string;
+  onNavigate?: () => void;
 }
 
 /**
@@ -22,6 +23,7 @@ export const NavItem: React.FC<NavItemProps> = ({
   divisionColor,
   isScrollLink = false,
   className,
+  onNavigate,
 }) => {
   const hoverStyles = {
     cyber: "hover:text-[#FFFFFF] hover:bg-[#240B0B]/80 hover:shadow-[0_0_12px_rgba(36,11,11,0.8)]",
@@ -30,6 +32,7 @@ export const NavItem: React.FC<NavItemProps> = ({
   };
 
   const handleScrollClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    onNavigate?.();
     if (isScrollLink && href.startsWith("#")) {
       e.preventDefault();
       const targetId = href.replace("#", "");

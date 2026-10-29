@@ -31,14 +31,12 @@ export const CybersecurityHeader: React.FC<CybersecurityHeaderProps> = ({
 
   const navLinks = currentLocale === "es"
     ? [
-        { label: "Próximamente", href: "/proximamente", isScroll: false },
-        { label: "Penetration Testing", href: "/cybersecurity/penetration-testing", isScroll: false },
+        { label: "Penetration Testing", href: "#especialidades", isScroll: true },
         { label: "Enfoque", href: "#enfoque", isScroll: true },
         { label: "Contacto", href: "#contact", isScroll: true },
       ]
     : [
-        { label: "Coming Soon", href: "/proximamente", isScroll: false },
-        { label: "Penetration Testing", href: "/cybersecurity/penetration-testing", isScroll: false },
+        { label: "Penetration Testing", href: "#especialidades", isScroll: true },
         { label: "Approach", href: "#enfoque", isScroll: true },
         { label: "Contact", href: "#contact", isScroll: true },
       ];
@@ -48,6 +46,7 @@ export const CybersecurityHeader: React.FC<CybersecurityHeaderProps> = ({
     href: string,
     isScroll: boolean
   ) => {
+    setMobileMenuOpen(false);
     if (isScroll && href.startsWith("#")) {
       e.preventDefault();
       const targetId = href.replace("#", "");
@@ -114,8 +113,9 @@ export const CybersecurityHeader: React.FC<CybersecurityHeaderProps> = ({
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-neutral-800 dark:text-neutral-300 hover:text-black dark:hover:text-white rounded-[2px] border border-neutral-300 dark:border-[#7A1C1C]/40 bg-neutral-100/50 dark:bg-[#240B0B]/40"
-            aria-label="Abrir Menú de Navegación de Ciberseguridad"
+            className="min-w-11 min-h-11 flex items-center justify-center p-2 text-neutral-800 dark:text-neutral-300 hover:text-black dark:hover:text-white rounded-[2px] border border-neutral-300 dark:border-[#7A1C1C]/40 bg-neutral-100/50 dark:bg-[#240B0B]/40"
+            aria-label={mobileMenuOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación"}
+            aria-expanded={mobileMenuOpen}
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>

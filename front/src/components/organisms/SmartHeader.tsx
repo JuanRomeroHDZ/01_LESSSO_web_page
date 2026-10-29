@@ -63,22 +63,6 @@ export const SmartHeader: React.FC<SmartHeaderProps> = ({
 
           <span className="text-neutral-400 dark:text-neutral-700 select-none text-xs" aria-hidden="true">|</span>
 
-          <NavItem
-            label={t.software}
-            href="/software"
-            divisionColor="software"
-          />
-
-          <span className="text-neutral-400 dark:text-neutral-700 select-none text-xs" aria-hidden="true">|</span>
-
-          <NavItem
-            label={t.infrastructure}
-            href="/infrastructure"
-            divisionColor="infra"
-          />
-
-          <span className="text-neutral-400 dark:text-neutral-700 select-none text-xs" aria-hidden="true">|</span>
-
           {/* Enlaces con desplazamiento suave (smooth scroll) */}
           <NavItem
             label={t.us}
@@ -113,8 +97,9 @@ export const SmartHeader: React.FC<SmartHeaderProps> = ({
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-neutral-800 dark:text-neutral-300 hover:text-black dark:hover:text-white rounded-[2px] border border-neutral-300 dark:border-neutral-800"
-            aria-label="Abrir Menú de Navegación"
+            className="min-w-11 min-h-11 flex items-center justify-center p-2 text-neutral-800 dark:text-neutral-300 hover:text-black dark:hover:text-white rounded-[2px] border border-neutral-300 dark:border-neutral-800"
+            aria-label={mobileMenuOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación"}
+            aria-expanded={mobileMenuOpen}
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -128,32 +113,23 @@ export const SmartHeader: React.FC<SmartHeaderProps> = ({
             label={t.cybersecurity}
             href="/cybersecurity"
             divisionColor="cyber"
-            className="w-full py-2"
-          />
-          <NavItem
-            label={t.software}
-            href="/software"
-            divisionColor="software"
-            className="w-full py-2"
-          />
-          <NavItem
-            label={t.infrastructure}
-            href="/infrastructure"
-            divisionColor="infra"
-            className="w-full py-2"
+            className="w-full min-h-11 flex items-center py-2"
+            onNavigate={() => setMobileMenuOpen(false)}
           />
           <div className="h-[1px] bg-neutral-200 dark:bg-neutral-800 my-1" />
           <NavItem
             label={t.us}
             href="#nosotros"
             isScrollLink
-            className="w-full py-2"
+            className="w-full min-h-11 flex items-center py-2"
+            onNavigate={() => setMobileMenuOpen(false)}
           />
           <NavItem
             label={t.contact}
             href="#contacto"
             isScrollLink
-            className="w-full py-2"
+            className="w-full min-h-11 flex items-center py-2"
+            onNavigate={() => setMobileMenuOpen(false)}
           />
         </div>
       )}

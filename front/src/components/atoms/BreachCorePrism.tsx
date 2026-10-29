@@ -1,4 +1,7 @@
+"use client";
+
 import React from "react";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { cn } from "@/lib/utils";
 
 export interface BreachCorePrismProps {
@@ -19,6 +22,7 @@ export interface BreachCorePrismProps {
  * - Esquinas y líneas geométricas casi rectas, sin emojis.
  */
 export const BreachCorePrism: React.FC<BreachCorePrismProps> = ({ className }) => {
+  const reducedMotion = useReducedMotion();
   // Graduaciones perimetrales cada 15 grados (24 marcas)
   const perimeterTicks = Array.from({ length: 24 }).map((_, i) => i * 15);
 
@@ -140,10 +144,10 @@ export const BreachCorePrism: React.FC<BreachCorePrismProps> = ({ className }) =
             return (
               <line
                 key={`prism-tick-${deg}`}
-                x1={x1}
-                y1={y1}
-                x2={x2}
-                y2={y2}
+                x1={Number(x1.toFixed(4))}
+                y1={Number(y1.toFixed(4))}
+                x2={Number(x2.toFixed(4))}
+                y2={Number(y2.toFixed(4))}
                 stroke={deg % 90 === 0 ? "#A98242" : "#9E2A2B"}
                 strokeWidth={deg % 90 === 0 ? 1 : 0.6}
                 strokeOpacity={deg % 90 === 0 ? 0.8 : 0.35}
@@ -266,7 +270,8 @@ export const BreachCorePrism: React.FC<BreachCorePrismProps> = ({ className }) =
             strokeLinecap="square"
             strokeDasharray="45 360"
           >
-            <animate
+            {!reducedMotion && (
+              <animate
               attributeName="stroke-dashoffset"
               from="45"
               to="-350"
@@ -274,7 +279,9 @@ export const BreachCorePrism: React.FC<BreachCorePrismProps> = ({ className }) =
               repeatCount="indefinite"
               begin="0s"
             />
-            <animate
+            )}
+            {!reducedMotion && (
+              <animate
               attributeName="opacity"
               values="0; 1; 1; 0.9; 0"
               keyTimes="0; 0.1; 0.75; 0.95; 1"
@@ -282,6 +289,7 @@ export const BreachCorePrism: React.FC<BreachCorePrismProps> = ({ className }) =
               repeatCount="indefinite"
               begin="0s"
             />
+            )}
           </path>
 
           {/* Guía estática de la ruta Beta (Entrada inferior izquierda) */}
@@ -303,7 +311,8 @@ export const BreachCorePrism: React.FC<BreachCorePrismProps> = ({ className }) =
             strokeLinecap="square"
             strokeDasharray="45 360"
           >
-            <animate
+            {!reducedMotion && (
+              <animate
               attributeName="stroke-dashoffset"
               from="45"
               to="-350"
@@ -311,7 +320,9 @@ export const BreachCorePrism: React.FC<BreachCorePrismProps> = ({ className }) =
               repeatCount="indefinite"
               begin="2.5s"
             />
-            <animate
+            )}
+            {!reducedMotion && (
+              <animate
               attributeName="opacity"
               values="0; 1; 1; 0.9; 0"
               keyTimes="0; 0.1; 0.75; 0.95; 1"
@@ -319,6 +330,7 @@ export const BreachCorePrism: React.FC<BreachCorePrismProps> = ({ className }) =
               repeatCount="indefinite"
               begin="2.5s"
             />
+            )}
           </path>
         </g>
 
@@ -328,7 +340,8 @@ export const BreachCorePrism: React.FC<BreachCorePrismProps> = ({ className }) =
         <g>
           {/* Onda 1: Validación Dorada (#A98242) sincronizada con impacto Alpha */}
           <circle cx="250" cy="250" r="18" fill="none" stroke="#A98242" strokeWidth="0.8">
-            <animate
+            {!reducedMotion && (
+              <animate
               attributeName="r"
               from="18"
               to="230"
@@ -336,7 +349,9 @@ export const BreachCorePrism: React.FC<BreachCorePrismProps> = ({ className }) =
               repeatCount="indefinite"
               begin="2.2s"
             />
-            <animate
+            )}
+            {!reducedMotion && (
+              <animate
               attributeName="opacity"
               values="0.9; 0.45; 0"
               keyTimes="0; 0.5; 1"
@@ -344,11 +359,13 @@ export const BreachCorePrism: React.FC<BreachCorePrismProps> = ({ className }) =
               repeatCount="indefinite"
               begin="2.2s"
             />
+            )}
           </circle>
 
           {/* Onda 2: Validación Carmesí (#9E2A2B) sincronizada con impacto Beta */}
           <circle cx="250" cy="250" r="18" fill="none" stroke="#9E2A2B" strokeWidth="0.8">
-            <animate
+            {!reducedMotion && (
+              <animate
               attributeName="r"
               from="18"
               to="230"
@@ -356,7 +373,9 @@ export const BreachCorePrism: React.FC<BreachCorePrismProps> = ({ className }) =
               repeatCount="indefinite"
               begin="4.7s"
             />
-            <animate
+            )}
+            {!reducedMotion && (
+              <animate
               attributeName="opacity"
               values="0.85; 0.4; 0"
               keyTimes="0; 0.5; 1"
@@ -364,11 +383,13 @@ export const BreachCorePrism: React.FC<BreachCorePrismProps> = ({ className }) =
               repeatCount="indefinite"
               begin="4.7s"
             />
+            )}
           </circle>
 
           {/* Onda 3: Eco ultra fino blanco */}
           <circle cx="250" cy="250" r="18" fill="none" stroke="#FFFFFF" strokeWidth="0.5">
-            <animate
+            {!reducedMotion && (
+              <animate
               attributeName="r"
               from="18"
               to="240"
@@ -376,7 +397,9 @@ export const BreachCorePrism: React.FC<BreachCorePrismProps> = ({ className }) =
               repeatCount="indefinite"
               begin="2.4s"
             />
-            <animate
+            )}
+            {!reducedMotion && (
+              <animate
               attributeName="opacity"
               values="0.7; 0.3; 0"
               keyTimes="0; 0.5; 1"
@@ -384,6 +407,7 @@ export const BreachCorePrism: React.FC<BreachCorePrismProps> = ({ className }) =
               repeatCount="indefinite"
               begin="2.4s"
             />
+            )}
           </circle>
         </g>
 
@@ -433,12 +457,14 @@ export const BreachCorePrism: React.FC<BreachCorePrismProps> = ({ className }) =
             height="4"
             fill="#FFFFFF"
           >
-            <animate
+            {!reducedMotion && (
+              <animate
               attributeName="fill"
               values="#FFFFFF;#A98242;#9E2A2B;#FFFFFF"
               dur="2.5s"
               repeatCount="indefinite"
             />
+            )}
           </rect>
         </g>
       </svg>

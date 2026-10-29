@@ -1,7 +1,8 @@
 import { ContactFormData, ApiResponse, LeadSubmissionResult } from "../types";
 
 const BACKEND_URL =
-  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000";
+  process.env.NEXT_PUBLIC_BACKEND_URL ||
+  (process.env.NODE_ENV === "development" ? "http://localhost:4000" : "");
 
 /**
  * Cliente HTTP para enviar prospectos hacia la API de LESSSO
@@ -9,6 +10,9 @@ const BACKEND_URL =
 export async function submitContactLead(
   formData: ContactFormData
 ): Promise<ApiResponse<LeadSubmissionResult>> {
+  if (!BACKEND_URL) {
+    return { success: false, message: "El formulario no está disponible en este momento. Contáctenos directamente por correo." };
+  }
   const targetUrl = `${BACKEND_URL}/api/v1/leads`;
 
   try {
@@ -33,19 +37,10 @@ export async function submitContactLead(
     }
 
     return data;
-  } catch (error) {
-    console.warn(
-      "[API_CLIENT_OFFLINE] Servidor backend no alcanzable directamente, registrando envio simulado en cliente."
-    );
-    // Modo de resiliencia si la API externa aun no esta encendida en pruebas locales
+  } catch {
     return {
-      success: true,
-      message:
-        "Solicitud capturada exitosamente. Nos comunicaremos con usted a la brevedad.",
-      data: {
-        leadId: "local-" + Date.now(),
-        cooldownSeconds: 90,
-      },
+      success: false,
+      message: "No fue posible conectar con el servidor. Inténtelo de nuevo o contáctenos directamente por correo.",
     };
   }
 }

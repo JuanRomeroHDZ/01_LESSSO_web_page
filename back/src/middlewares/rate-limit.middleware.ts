@@ -8,6 +8,15 @@ interface RateLimitRecord {
 
 const memoryRateLimitMap = new Map<string, RateLimitRecord>();
 
+// Evita conservar indefinidamente registros de visitantes que no regresan.
+const cleanupTimer = setInterval(() => {
+  const now = Date.now();
+  for (const [ip, record] of memoryRateLimitMap) {
+    if (record.resetTime <= now) memoryRateLimitMap.delete(ip);
+  }
+}, 60_000);
+cleanupTimer.unref();
+
 /**
  * Middleware para limitar la tasa de peticiones por direccion IP
  */
@@ -36,6 +45,7 @@ export async function rateLimitCheck(
     reply.status(429).send({
       statusCode: 429,
       error: "TOO_MANY_REQUESTS",
+      remainingSeconds: retryAfterSeconds,
       message: `Limite de solicitudes excedido. Intente nuevamente en ${retryAfterSeconds} segundos.`,
     });
     return;

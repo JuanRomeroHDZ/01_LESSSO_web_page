@@ -23,7 +23,7 @@ export const CooldownTimer: React.FC<CooldownTimerProps> = ({
   totalSeconds = 90,
   progressPercent,
   title = "Periodo de Espera Activo",
-  message = "Su solicitud fue transmitida de manera segura. Para evitar duplicidades en el sistema CRM, el formulario se reactivará automáticamente.",
+  message = "Podrá volver a enviar el formulario cuando termine el tiempo de espera.",
   className,
 }) => {
   return (

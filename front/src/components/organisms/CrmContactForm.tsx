@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+import Link from "next/link";
+import { useForm, Controller, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { contactFormSchema, ContactFormSchemaType } from "@/lib/validators";
 import { submitContactLead } from "@/lib/api-client";
@@ -18,8 +19,6 @@ import { Heading, Text } from "@/components/atoms/Typography";
 import { EntitySwitch } from "@/components/molecules/EntitySwitch";
 import { FormField } from "@/components/molecules/FormField";
 import { CooldownTimer } from "@/components/molecules/CooldownTimer";
-import { WhatsAppButton } from "@/components/molecules/WhatsAppButton";
-import { buildStructuredWhatsAppUrl } from "@/hooks/useDynamicWhatsApp";
 import { CheckCircle2, ShieldAlert } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DiagonalLightRays } from "@/components/atoms/DiagonalLightRays";
@@ -71,9 +70,8 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({
     register,
     handleSubmit,
     control,
-    watch,
     setValue,
-    reset,
+    resetField,
     formState: { errors, isSubmitting },
   } = useForm<ContactFormSchemaType>({
     resolver: zodResolver(contactFormSchema),
@@ -87,20 +85,25 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({
     },
   });
 
-  // Observar valores en tiempo real para el contador y el boton de WhatsApp
-  const watchedDetails = watch("projectDetails") || "";
-  const watchedFullName = watch("fullName");
-  const watchedCompany = watch("companyName");
-  const watchedArea = watch("areaOfInterest");
+  // Observar los detalles para actualizar el contador.
+  const watchedDetails = useWatch({ control, name: "projectDetails" }) || "";
 
   // Cambio de entidad Persona / Empresa
   const handleEntityChange = (entity: EntityType) => {
+    if (entity === "PERSON" && selectedEntity === "COMPANY") {
+      resetField("companyName");
+      resetField("jobTitle");
+      resetField("companySize");
+      resetField("urgencyLevel");
+      resetField("estimatedBudget");
+    }
     setSelectedEntity(entity);
     setValue("entityType", entity, { shouldValidate: true });
   };
 
   const onSubmit = async (data: ContactFormSchemaType) => {
     setServerError(null);
+    setSubmissionSuccess(false);
 
     if (isCooldownActive) {
       setServerError(`Por favor espere ${remainingSeconds} segundos antes de enviar nuevamente.`);
@@ -118,50 +121,20 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({
         projectDetails: data.projectDetails,
         termsAccepted: data.termsAccepted,
         website_verification_code: data.website_verification_code,
-        // Campos de Empresa si corresponden
-        companyName: data.companyName,
-        jobTitle: data.jobTitle,
-        companySize: data.companySize as CompanySize,
-        urgencyLevel: data.urgencyLevel as UrgencyLevel,
-        estimatedBudget: data.estimatedBudget as EstimatedBudget,
+        ...(data.entityType === "COMPANY" ? {
+          companyName: data.companyName,
+          jobTitle: data.jobTitle,
+          companySize: data.companySize as CompanySize,
+          urgencyLevel: data.urgencyLevel as UrgencyLevel,
+          estimatedBudget: data.estimatedBudget as EstimatedBudget,
+        } : {}),
       });
 
       if (response.success) {
-        setSubmissionSuccess(true);
         startCooldown(response.data?.cooldownSeconds || 90);
 
-        // Generar enlace estructurado y abrir canal directo de WhatsApp
-        const waUrl = buildStructuredWhatsAppUrl({
-          entityType: data.entityType,
-          fullName: data.fullName,
-          email: data.email,
-          countryCode: data.countryCode,
-          phoneNumber: data.phoneNumber,
-          areaOfInterest: data.areaOfInterest,
-          projectDetails: data.projectDetails,
-          companyName: data.companyName,
-          jobTitle: data.jobTitle,
-          companySize: data.companySize,
-          urgencyLevel: data.urgencyLevel,
-          estimatedBudget: data.estimatedBudget,
-        });
+        setSubmissionSuccess(true);
 
-        if (typeof window !== "undefined") {
-          window.open(waUrl, "_blank", "noopener,noreferrer");
-        }
-
-        reset({
-          entityType: selectedEntity,
-          countryCode: "+52",
-          termsAccepted: false,
-          website_verification_code: "",
-          projectDetails: "",
-          phoneNumber: "",
-          fullName: "",
-          email: "",
-          companyName: "",
-          jobTitle: "",
-        });
       } else {
         if (response.remainingSeconds && response.remainingSeconds > 0) {
           startCooldown(response.remainingSeconds);
@@ -202,7 +175,7 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({
       <div className="max-w-4xl mx-auto relative z-10">
         {/* Encabezado de la Seccion */}
         <div className="flex flex-col items-center text-center mb-16">
-          <span className="font-sans text-xs uppercase tracking-[0.25em] text-[#A98242] mb-3 font-semibold">
+          <span className="font-sans text-xs uppercase tracking-[0.25em] text-[#76591F] dark:text-[#C9A66B] mb-3 font-semibold">
             {t.sectionBadge}
           </span>
           <Heading as="h2" size="xl" className="font-normal mb-4 text-[#080A0A] dark:text-[#FFFFFF]">
@@ -229,29 +202,6 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({
           </div>
         )}
 
-        {/* Mensaje de Exito Inmediato */}
-        {submissionSuccess && !isCooldownActive && (
-          <div className="mb-10 p-6 bg-neutral-100 dark:bg-neutral-950 border border-[#A98242]/50 rounded-[3px] flex items-start gap-4">
-            <CheckCircle2 className="w-5 h-5 text-[#A98242] shrink-0 mt-0.5" />
-            <div>
-              <h4 className="font-serif text-base text-[#080A0A] dark:text-[#FFFFFF] font-normal mb-1">
-                {t.feedback.successHeading}
-              </h4>
-              <p className="font-sans text-xs text-[#080A0A]/75 dark:text-neutral-300 font-light leading-relaxed">
-                {t.feedback.successText}
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* Mensaje de Error del Servidor */}
-        {serverError && (
-          <div className="mb-8 p-4 bg-red-950/40 border border-red-800/60 rounded-[3px] flex items-center gap-3 text-xs text-red-200">
-            <ShieldAlert className="w-4 h-4 shrink-0 text-red-400" />
-            <span>{serverError}</span>
-          </div>
-        )}
-
         {/* Contenedor del Formulario */}
         <div
           className={cn(
@@ -264,7 +214,7 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({
           {/* Conmutador Superior Persona / Empresa (Esquinas al 10%) */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pb-8 mb-8 border-b border-neutral-200 dark:border-neutral-900">
             <span className="text-xs uppercase tracking-widest text-[#080A0A]/70 dark:text-neutral-400 font-light">
-              Modalidad de Contacto:
+              {currentLocale === "es" ? "Modalidad de contacto:" : "Contact type:"}
             </span>
             <EntitySwitch
               value={selectedEntity}
@@ -290,11 +240,15 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormField
                 label={t.fields.fullName.label}
+                htmlFor="contact-fullName"
                 required
                 error={errors.fullName?.message}
               >
                 <Input
                   maxLength={80}
+                  aria-label={t.fields.fullName.label}
+                    id="contact-fullName"
+                  autoComplete="name"
                   placeholder={t.fields.fullName.placeholder}
                   hasError={!!errors.fullName}
                   {...register("fullName")}
@@ -303,11 +257,15 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({
 
               <FormField
                 label={t.fields.email.label}
+                htmlFor="contact-email"
                 required
                 error={errors.email?.message}
               >
                 <Input
                   type="email"
+                  aria-label={t.fields.email.label}
+                    id="contact-email"
+                  autoComplete="email"
                   maxLength={100}
                   placeholder={t.fields.email.placeholder}
                   hasError={!!errors.email}
@@ -320,6 +278,7 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormField
                 label={t.fields.phone.label}
+                htmlFor="contact-phone"
                 required
                 helper={t.fields.phone.helper}
                 error={errors.phoneNumber?.message}
@@ -331,12 +290,15 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({
                       control={control}
                       render={({ field }) => (
                         <Select
+                          aria-label={currentLocale === "es" ? "Código de país" : "Country code"}
                           options={countryDialingCodes.map((c) => ({
                             value: c.code,
                             label: c.code,
                           }))}
                           value={field.value}
                           onChange={field.onChange}
+                          onBlur={field.onBlur}
+                          ref={field.ref}
                         />
                       )}
                     />
@@ -344,6 +306,9 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({
                   <div className="w-2/3">
                     <Input
                       type="tel"
+                      aria-label={t.fields.phone.label}
+                    id="contact-phone"
+                      autoComplete="tel-national"
                       maxLength={15}
                       placeholder={t.fields.phone.placeholder || "0000000000"}
                       hasError={!!errors.phoneNumber}
@@ -355,6 +320,7 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({
 
               <FormField
                 label={t.fields.area.label}
+                htmlFor="contact-area"
                 required
                 error={errors.areaOfInterest?.message}
               >
@@ -363,10 +329,14 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({
                   control={control}
                   render={({ field }) => (
                     <Select
+                      aria-label={t.fields.area.label}
+                    id="contact-area"
                       placeholder={t.fields.area.placeholder}
                       options={t.fields.area.options}
                       value={field.value || ""}
                       onChange={field.onChange}
+                          onBlur={field.onBlur}
+                          ref={field.ref}
                       hasError={!!errors.areaOfInterest}
                     />
                   )}
@@ -379,15 +349,18 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({
             {/* Para agregar mas campos: declare en Zod y vincule aqui con Input */}
             {/* ---------------------------------------------------------------- */}
             {selectedEntity === "COMPANY" && (
-              <div className="pt-6 border-t border-neutral-900 space-y-6 animate-fadeIn">
+              <div className="pt-6 border-t border-neutral-200 dark:border-neutral-900 space-y-6 animate-fadeIn">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <FormField
                     label={t.fields.companyName.label}
+                htmlFor="contact-companyName"
                     required
                     error={errors.companyName?.message}
                   >
                     <Input
                       maxLength={100}
+                      aria-label={t.fields.companyName.label}
+                    id="contact-companyName"
                       placeholder={t.fields.companyName.placeholder}
                       hasError={!!errors.companyName}
                       {...register("companyName")}
@@ -396,10 +369,13 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({
 
                   <FormField
                     label={t.fields.jobTitle.label}
+                htmlFor="contact-jobTitle"
                     error={errors.jobTitle?.message}
                   >
                     <Input
                       maxLength={100}
+                      aria-label={t.fields.jobTitle.label}
+                    id="contact-jobTitle"
                       placeholder={t.fields.jobTitle.placeholder}
                       hasError={!!errors.jobTitle}
                       {...register("jobTitle")}
@@ -410,6 +386,7 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <FormField
                     label={t.fields.companySize.label}
+                htmlFor="contact-companySize"
                     error={errors.companySize?.message}
                   >
                     <Controller
@@ -417,10 +394,14 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({
                       control={control}
                       render={({ field }) => (
                         <Select
+                          aria-label={t.fields.companySize.label}
+                    id="contact-companySize"
                           placeholder={t.fields.companySize.placeholder}
                           options={t.fields.companySize.options}
                           value={field.value || ""}
                           onChange={field.onChange}
+                          onBlur={field.onBlur}
+                          ref={field.ref}
                         />
                       )}
                     />
@@ -428,6 +409,7 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({
 
                   <FormField
                     label={t.fields.urgency.label}
+                htmlFor="contact-urgency"
                     error={errors.urgencyLevel?.message}
                   >
                     <Controller
@@ -435,10 +417,14 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({
                       control={control}
                       render={({ field }) => (
                         <Select
+                          aria-label={t.fields.urgency.label}
+                    id="contact-urgency"
                           placeholder={t.fields.urgency.placeholder}
                           options={t.fields.urgency.options}
                           value={field.value || ""}
                           onChange={field.onChange}
+                          onBlur={field.onBlur}
+                          ref={field.ref}
                         />
                       )}
                     />
@@ -446,6 +432,7 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({
 
                   <FormField
                     label={t.fields.budget.label}
+                htmlFor="contact-budget"
                     error={errors.estimatedBudget?.message}
                   >
                     <Controller
@@ -453,10 +440,14 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({
                       control={control}
                       render={({ field }) => (
                         <Select
+                          aria-label={t.fields.budget.label}
+                    id="contact-budget"
                           placeholder={t.fields.budget.placeholder}
                           options={t.fields.budget.options}
                           value={field.value || ""}
                           onChange={field.onChange}
+                          onBlur={field.onBlur}
+                          ref={field.ref}
                         />
                       )}
                     />
@@ -468,12 +459,15 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({
             {/* Fila 3: Detalles del Proyecto (Textarea con contador en vivo 20-500) */}
             <FormField
               label={t.fields.projectDetails.label}
+                htmlFor="contact-projectDetails"
               required
               charCount={{ current: watchedDetails.length, min: 20, max: 500 }}
               error={errors.projectDetails?.message}
             >
               <textarea
                 rows={4}
+                aria-label={t.fields.projectDetails.label}
+                    id="contact-projectDetails"
                 maxLength={500}
                 placeholder={t.fields.projectDetails.placeholder}
                 className="w-full px-4 py-3 text-sm font-sans font-light rounded-[3px] bg-[#F8F8F6] dark:bg-[#080A0A]/40 text-[#080A0A] dark:text-[#FFFFFF] placeholder:text-neutral-400 dark:placeholder:text-neutral-500 border border-neutral-300 dark:border-neutral-800 transition-all duration-200 outline-none focus:border-[#A98242] focus:ring-1 focus:ring-[#A98242]/30 resize-none"
@@ -488,15 +482,19 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({
                 control={control}
                 render={({ field }) => (
                   <Checkbox
+                    id="termsAccepted"
                     checked={field.value}
                     onChange={(e) => field.onChange(e.target.checked)}
                     hasError={!!errors.termsAccepted}
                   />
                 )}
               />
-              <label className="text-xs text-[#080A0A]/70 dark:text-neutral-400 font-light select-none cursor-pointer leading-tight">
-                {t.fields.terms.checkbox}
-                {/* Enlace futuro: vincular a /terminos y /privacidad una vez redactados */}
+              <label htmlFor="termsAccepted" className="text-xs text-[#080A0A]/70 dark:text-neutral-400 font-light select-none cursor-pointer leading-tight">
+                {currentLocale === "es" ? "He leído y acepto los " : "I have read and agree to the "}
+                <Link href="/terminos" className="underline">{SITE_CONTENT[currentLocale].footer.termsLink}</Link>
+                {currentLocale === "es" ? " y el " : " and "}
+                <Link href="/privacidad" className="underline">{SITE_CONTENT[currentLocale].footer.privacyLink}</Link>.
+
               </label>
             </div>
             {errors.termsAccepted && (
@@ -518,20 +516,32 @@ export const CrmContactForm: React.FC<CrmContactFormProps> = ({
                 {isSubmitting ? t.buttons.submitting : t.buttons.submit}
               </Button>
 
-              {/* Boton Dinamico de WhatsApp (Diseno Editorial Sobrio) */}
-              <div className="w-full sm:w-auto">
-                <WhatsAppButton
-                  label={t.buttons.whatsappDefault}
-                  formData={{
-                    fullName: watchedFullName,
-                    companyName: watchedCompany,
-                    areaOfInterest: watchedArea,
-                    projectDetails: watchedDetails,
-                  }}
-                  className="w-full"
-                />
-              </div>
+
             </div>
+        {/* Mensaje de Error del Servidor */}
+        {serverError && (
+          <div role="alert" className="p-4 bg-red-50 dark:bg-red-950/40 border border-red-800/60 rounded-[3px] flex items-center gap-3 text-xs text-red-900 dark:text-red-200">
+            <ShieldAlert className="w-4 h-4 shrink-0 text-red-400" />
+            <span>{serverError}</span>
+          </div>
+        )}
+
+        {/* Mensaje de Exito Inmediato */}
+        {submissionSuccess && (
+          <div role="status" className="p-6 bg-neutral-100 dark:bg-neutral-950 border border-[#A98242]/50 rounded-[3px] flex items-start gap-4">
+            <CheckCircle2 className="w-5 h-5 text-[#A98242] shrink-0 mt-0.5" />
+            <div>
+              <h4 className="font-serif text-base text-[#080A0A] dark:text-[#FFFFFF] font-normal mb-1">
+                {t.feedback.successHeading}
+              </h4>
+              <p className="font-sans text-xs text-[#080A0A]/75 dark:text-neutral-300 font-light leading-relaxed">
+                {t.feedback.successText}
+              </p>
+
+            </div>
+          </div>
+        )}
+
           </form>
         </div>
       </div>

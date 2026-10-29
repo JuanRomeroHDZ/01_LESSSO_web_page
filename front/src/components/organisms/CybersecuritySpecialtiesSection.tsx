@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { ShieldCheck, Server, ArrowRight, Lock, Terminal, Activity } from "lucide-react";
+import { ShieldCheck, ArrowRight } from "lucide-react";
 import { Heading, Text } from "@/components/atoms/Typography";
 import { DiagonalLightRays } from "@/components/atoms/DiagonalLightRays";
 import { Locale } from "@/config/site-content";
@@ -75,15 +75,15 @@ export const CybersecuritySpecialtiesSection: React.FC<CybersecuritySpecialtiesS
 
           <Text variant="lead" className="text-[#080A0A]/75 dark:text-neutral-300 font-light leading-relaxed">
             {isEs
-              ? "Articulamos la seguridad tecnológica en dos frentes complementarios: la evaluación ofensiva para descubrir brechas críticas antes que el adversario, y el endurecimiento continuo de la infraestructura tecnológica."
-              : "We structure technological security across two complementary fronts: offensive assessment to discover critical gaps before adversaries, and continuous infrastructure hardening."}
+              ? "Evaluamos la seguridad de sus sistemas para identificar vulnerabilidades y ayudarle a priorizar su corrección."
+              : "We assess the security of your systems to identify vulnerabilities and help you prioritize fixes."}
           </Text>
         </div>
 
         {/* Grilla de los 2 Bloques Arquitectónicos */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
           {/* Bloque Principal (Activo): Penetration Testing (7 cols) */}
-          <div className="lg:col-span-7 group relative flex flex-col justify-between p-8 md:p-10 bg-[#FFFFFF] dark:bg-[#0D1010] border border-[#7A1C1C]/40 dark:border-[#7A1C1C]/40 hover:border-[#7A1C1C] dark:hover:border-[#A98242] rounded-[3px] transition-all duration-300 shadow-sm hover:shadow-[0_8px_32px_rgba(122,28,28,0.2)]">
+          <div className="lg:col-span-12 group relative flex flex-col justify-between p-8 md:p-10 bg-[#FFFFFF] dark:bg-[#0D1010] border border-[#7A1C1C]/40 dark:border-[#7A1C1C]/40 hover:border-[#7A1C1C] dark:hover:border-[#A98242] rounded-[3px] transition-all duration-300 shadow-sm hover:shadow-[0_8px_32px_rgba(122,28,28,0.2)]">
             <div>
               {/* Badge y Estado */}
               <div className="flex items-center justify-between pb-6 mb-6 border-b border-neutral-100 dark:border-neutral-900">
@@ -107,8 +107,8 @@ export const CybersecuritySpecialtiesSection: React.FC<CybersecuritySpecialtiesS
 
               <Text className="text-[#080A0A]/75 dark:text-neutral-300 font-light leading-relaxed mb-8 text-sm md:text-base">
                 {isEs
-                  ? "Pruebas de intrusión controladas sobre aplicaciones web, APIs, redes corporativas, infraestructuras en la nube y servidores críticos. Ejecutamos vectores de ataque del mundo real bajo esquemas de caja negra, gris y blanca con absoluta discreción y cero disrupción operativa."
-                  : "Controlled penetration tests across web applications, APIs, enterprise networks, cloud assets, and critical servers. We execute real-world attack vectors under black, gray, and white box models with rigorous discretion and zero downtime."}
+                  ? "Pruebas de intrusión controladas sobre aplicaciones web, APIs, redes corporativas, infraestructuras en la nube y servidores críticos. Ejecutamos vectores de ataque del mundo real bajo esquemas de caja negra, gris y blanca con discreción y un alcance acordado con su equipo."
+                  : "Controlled penetration tests across web applications, APIs, enterprise networks, cloud assets, and critical servers. We execute real-world attack vectors under black, gray, and white box models with discretion and a scope agreed with your team."}
               </Text>
 
               {/* Puntos de Valor Técnico */}
@@ -123,7 +123,7 @@ export const CybersecuritySpecialtiesSection: React.FC<CybersecuritySpecialtiesS
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 bg-[#7A1C1C] dark:bg-[#A98242] rounded-[1px]" />
-                  <span>{isEs ? "Descubrimiento de Zero-Days Internos" : "Internal Logic Flaw Discovery"}</span>
+                  <span>{isEs ? "Detección de fallas de seguridad" : "Internal Logic Flaw Discovery"}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 bg-[#7A1C1C] dark:bg-[#A98242] rounded-[1px]" />
@@ -135,11 +135,11 @@ export const CybersecuritySpecialtiesSection: React.FC<CybersecuritySpecialtiesS
             {/* Botón Prominente con Esquinas al 10% */}
             <div>
               <Link
-                href="/cybersecurity/penetration-testing"
+                href="#contacto"
                 className="inline-flex items-center justify-between w-full sm:w-auto gap-4 px-8 py-4 bg-[#240B0B] text-[#F8F8F6] hover:bg-[#3D1212] dark:bg-[#7A1C1C] dark:hover:bg-[#9E2A2B] font-sans text-xs uppercase tracking-widest font-medium rounded-[3px] transition-all duration-300 shadow-md group/btn"
               >
                 <span>
-                  {isEs ? "Explorar Penetration Testing" : "Explore Penetration Testing"}
+                  {isEs ? "Consultar sobre Penetration Testing" : "Ask about Penetration Testing"}
                 </span>
                 <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
               </Link>
@@ -152,67 +152,7 @@ export const CybersecuritySpecialtiesSection: React.FC<CybersecuritySpecialtiesS
             />
           </div>
 
-          {/* Bloque Secundario (En Desarrollo): Próximamente — Hardening y Defensa Activa (5 cols) */}
-          <Link
-            href="/proximamente"
-            className="lg:col-span-5 group relative flex flex-col justify-between p-8 md:p-10 bg-neutral-100/70 dark:bg-[#081416]/40 border border-neutral-300/80 dark:border-neutral-800 hover:border-[#7A1C1C] dark:hover:border-[#A98242] rounded-[3px] transition-all duration-300 shadow-sm hover:shadow-[0_8px_32px_rgba(36,11,11,0.15)] text-left"
-          >
-            <div>
-              {/* Badge y Estado */}
-              <div className="flex items-center justify-between pb-6 mb-6 border-b border-neutral-200 dark:border-neutral-800">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 flex items-center justify-center bg-neutral-200/60 dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded-[2px] text-neutral-600 dark:text-neutral-400 group-hover:text-[#7A1C1C] dark:group-hover:text-[#A98242] transition-colors">
-                    <Server className="w-5 h-5" />
-                  </div>
-                  <span className="font-mono text-[11px] tracking-widest text-[#7A1C1C] dark:text-[#A98242] uppercase font-medium">
-                    PROXIMAMENTE
-                  </span>
-                </div>
-                <span className="font-mono text-[10px] uppercase px-2.5 py-1 bg-neutral-200/80 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 rounded-[2px]">
-                  {isEs ? "EN ARQUITECTURA" : "IN ARCHITECTURE"}
-                </span>
-              </div>
 
-              {/* Título en Lora */}
-              <Heading as="h3" size="lg" className="font-normal text-[#080A0A] dark:text-[#FFFFFF] mb-4">
-                Hardening y Defensa Activa
-              </Heading>
-
-              <Text className="text-[#080A0A]/70 dark:text-neutral-400 font-light leading-relaxed mb-8 text-sm">
-                {isEs
-                  ? "Endurecimiento de servidores, bastionado de sistemas operativos, aseguramiento de contenedores y configuración estricta de políticas Zero-Trust para minimizar la superficie de exposición."
-                  : "Server hardening, operating system bastioning, container posture security, and strict Zero-Trust policy orchestration to systematically minimize attack surface."}
-              </Text>
-
-              {/* Items técnicos en desarrollo */}
-              <div className="space-y-3 pt-6 border-t border-neutral-200 dark:border-neutral-800/80 mb-8 text-xs font-sans text-neutral-600 dark:text-neutral-400 font-light">
-                <div className="flex items-center gap-2">
-                  <Lock className="w-3.5 h-3.5 text-[#7A1C1C] dark:text-[#A98242] shrink-0" />
-                  <span>{isEs ? "Bastionado de Kernels y Servicios" : "Kernel & Service Bastioning"}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Terminal className="w-3.5 h-3.5 text-[#7A1C1C] dark:text-[#A98242] shrink-0" />
-                  <span>{isEs ? "Políticas de Mínimo Privilegio (Zero-Trust)" : "Zero-Trust Privilege Models"}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Activity className="w-3.5 h-3.5 text-[#7A1C1C] dark:text-[#A98242] shrink-0" />
-                  <span>{isEs ? "Telemetría de Integridad y Monitoreo" : "Integrity Telemetry & Observability"}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Enlace sutil con indicador 404 */}
-            <div className="flex items-center justify-between pt-4 border-t border-neutral-200 dark:border-neutral-800 text-xs font-mono text-[#7A1C1C] dark:text-[#A98242] group-hover:underline">
-              <span>{isEs ? "Ver especificaciones preliminares" : "View preliminary specs"}</span>
-              <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-            </div>
-
-            {/* Borde inferior decorativo */}
-            <div
-              className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#A98242] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
-              aria-hidden="true"
-            />
-          </Link>
         </div>
       </div>
     </section>

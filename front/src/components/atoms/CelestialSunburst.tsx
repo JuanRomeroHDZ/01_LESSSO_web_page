@@ -1,4 +1,7 @@
+"use client";
+
 import React from "react";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { cn } from "@/lib/utils";
 
 export interface CelestialSunburstProps {
@@ -17,6 +20,7 @@ export interface CelestialSunburstProps {
 export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
   className,
 }) => {
+  const reducedMotion = useReducedMotion();
   // Generacion matematica de rayos astronomicos desde el nucleo (250, 250)
   const rays = [
     // Rayos Cardinales Mayores (Dorado #A98242)
@@ -136,10 +140,10 @@ export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
             return (
               <line
                 key={`tick-${deg}`}
-                x1={x1}
-                y1={y1}
-                x2={x2}
-                y2={y2}
+                x1={Number(x1.toFixed(4))}
+                y1={Number(y1.toFixed(4))}
+                x2={Number(x2.toFixed(4))}
+                y2={Number(y2.toFixed(4))}
                 className="sun-contrast"
                 strokeWidth="0.6"
                 strokeOpacity={deg % 90 === 0 ? 0.75 : deg % 30 === 0 ? 0.45 : 0.25}
@@ -260,10 +264,10 @@ export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
             return (
               <g key={`ray-${idx}`}>
                 <line
-                  x1={x1}
-                  y1={y1}
-                  x2={x2}
-                  y2={y2}
+                  x1={Number(x1.toFixed(4))}
+                  y1={Number(y1.toFixed(4))}
+                  x2={Number(x2.toFixed(4))}
+                  y2={Number(y2.toFixed(4))}
                   stroke={ray.isContrast ? undefined : ray.stroke}
                   className={ray.isContrast ? "sun-contrast" : undefined}
                   strokeWidth={ray.width}
@@ -272,10 +276,10 @@ export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
                 />
                 {ray.hasCross && (
                   <line
-                    x1={cx1}
-                    y1={cy1}
-                    x2={cx2}
-                    y2={cy2}
+                    x1={Number(cx1.toFixed(4))}
+                    y1={Number(cy1.toFixed(4))}
+                    x2={Number(cx2.toFixed(4))}
+                    y2={Number(cy2.toFixed(4))}
                     stroke={ray.stroke}
                     strokeWidth={1}
                     strokeOpacity={ray.opacity}
@@ -284,8 +288,8 @@ export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
                 {/* Micro punto terminal en rayos intercardinales */}
                 {ray.angle % 45 === 0 && !ray.hasCross && (
                   <circle
-                    cx={x2}
-                    cy={y2}
+                    cx={Number(x2.toFixed(4))}
+                    cy={Number(y2.toFixed(4))}
                     r="1.5"
                     className="sun-contrast"
                     fill="currentColor"
@@ -321,17 +325,18 @@ export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
             return (
               <line
                 key={`pulse-${idx}`}
-                x1={x1}
-                y1={y1}
-                x2={x2}
-                y2={y2}
+                x1={Number(x1.toFixed(4))}
+                y1={Number(y1.toFixed(4))}
+                x2={Number(x2.toFixed(4))}
+                y2={Number(y2.toFixed(4))}
                 stroke={pulse.isContrast ? undefined : pulse.stroke}
                 className={pulse.isContrast ? "sun-contrast" : undefined}
                 strokeWidth={1.3}
                 strokeLinecap="round"
                 strokeDasharray="26 260"
               >
-                <animate
+                {!reducedMotion && (
+              <animate
                   attributeName="stroke-dashoffset"
                   from="26"
                   to={`-${lineLen}`}
@@ -339,7 +344,9 @@ export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
                   repeatCount="indefinite"
                   begin={pulse.begin}
                 />
-                <animate
+            )}
+                {!reducedMotion && (
+              <animate
                   attributeName="opacity"
                   values="0; 0.95; 0.85; 0"
                   keyTimes="0; 0.15; 0.85; 1"
@@ -347,6 +354,7 @@ export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
                   repeatCount="indefinite"
                   begin={pulse.begin}
                 />
+            )}
               </line>
             );
           })}
@@ -364,7 +372,8 @@ export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
             stroke="#A98242"
             strokeWidth="0.5"
           >
-            <animate
+            {!reducedMotion && (
+              <animate
               attributeName="r"
               from="38"
               to="240"
@@ -372,7 +381,9 @@ export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
               repeatCount="indefinite"
               begin="0s"
             />
-            <animate
+            )}
+            {!reducedMotion && (
+              <animate
               attributeName="opacity"
               values="0.75; 0.45; 0"
               keyTimes="0; 0.55; 1"
@@ -380,6 +391,7 @@ export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
               repeatCount="indefinite"
               begin="0s"
             />
+            )}
           </circle>
           <circle
             cx="250"
@@ -389,7 +401,8 @@ export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
             className="sun-contrast"
             strokeWidth="0.5"
           >
-            <animate
+            {!reducedMotion && (
+              <animate
               attributeName="r"
               from="38"
               to="240"
@@ -397,7 +410,9 @@ export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
               repeatCount="indefinite"
               begin="2s"
             />
-            <animate
+            )}
+            {!reducedMotion && (
+              <animate
               attributeName="opacity"
               values="0.65; 0.35; 0"
               keyTimes="0; 0.55; 1"
@@ -405,6 +420,7 @@ export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
               repeatCount="indefinite"
               begin="2s"
             />
+            )}
           </circle>
           <circle
             cx="250"
@@ -414,7 +430,8 @@ export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
             stroke="#A98242"
             strokeWidth="0.5"
           >
-            <animate
+            {!reducedMotion && (
+              <animate
               attributeName="r"
               from="38"
               to="240"
@@ -422,7 +439,9 @@ export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
               repeatCount="indefinite"
               begin="4s"
             />
-            <animate
+            )}
+            {!reducedMotion && (
+              <animate
               attributeName="opacity"
               values="0.75; 0.45; 0"
               keyTimes="0; 0.55; 1"
@@ -430,6 +449,7 @@ export const CelestialSunburst: React.FC<CelestialSunburstProps> = ({
               repeatCount="indefinite"
               begin="4s"
             />
+            )}
           </circle>
         </g>
 

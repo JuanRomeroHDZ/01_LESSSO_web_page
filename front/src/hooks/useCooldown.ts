@@ -5,79 +5,64 @@ import { useState, useEffect, useCallback } from "react";
 const STORAGE_KEY = "lessso_contact_cooldown_expiry";
 const TOTAL_DURATION_KEY = "lessso_contact_cooldown_duration";
 
-/**
- * Hook para gestionar el periodo de Cooldown de 90 segundos tras envio del formulario
- */
+/** The server enforces the limit; this timer only informs the visitor. */
 export function useCooldown(defaultDurationSeconds: number = 90) {
-  const [remainingSeconds, setRemainingSeconds] = useState<number>(0);
-  const [totalSeconds, setTotalSeconds] = useState<number>(defaultDurationSeconds);
+  const [expiry, setExpiry] = useState<number | null>(null);
+  const [remainingSeconds, setRemainingSeconds] = useState(0);
+  const [totalSeconds, setTotalSeconds] = useState(defaultDurationSeconds);
 
-  // Inicializar estado revisando sessionStorage
   useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const storedExpiry = sessionStorage.getItem(STORAGE_KEY);
-    const storedDuration = sessionStorage.getItem(TOTAL_DURATION_KEY);
-
-    if (storedExpiry) {
-      const expiryTimestamp = parseInt(storedExpiry, 10);
-      const now = Date.now();
-      const diffSecs = Math.ceil((expiryTimestamp - now) / 1000);
-
-      if (diffSecs > 0) {
-        setRemainingSeconds(diffSecs);
-        if (storedDuration) {
-          setTotalSeconds(parseInt(storedDuration, 10));
-        }
+    try {
+      const storedExpiry = Number(sessionStorage.getItem(STORAGE_KEY));
+      const storedDuration = Number(sessionStorage.getItem(TOTAL_DURATION_KEY));
+      if (Number.isFinite(storedExpiry) && storedExpiry > Date.now()) {
+        setExpiry(storedExpiry);
+        setRemainingSeconds(Math.ceil((storedExpiry - Date.now()) / 1000));
+        if (Number.isFinite(storedDuration) && storedDuration > 0) setTotalSeconds(storedDuration);
       } else {
         sessionStorage.removeItem(STORAGE_KEY);
         sessionStorage.removeItem(TOTAL_DURATION_KEY);
       }
+    } catch {
+      // Browsers may block storage; the server still enforces the limit.
     }
   }, []);
 
-  // Cuenta regresiva activa
   useEffect(() => {
-    if (remainingSeconds <= 0) return;
+    if (expiry === null) return;
+    const update = () => {
+      const remaining = Math.max(0, Math.ceil((expiry - Date.now()) / 1000));
+      setRemainingSeconds(remaining);
+      if (remaining === 0) {
+        setExpiry(null);
+        try {
+          sessionStorage.removeItem(STORAGE_KEY);
+          sessionStorage.removeItem(TOTAL_DURATION_KEY);
+        } catch { /* Storage is optional. */ }
+      }
+    };
+    update();
+    const timer = window.setInterval(update, 1000);
+    return () => window.clearInterval(timer);
+  }, [expiry]);
 
-    const interval = setInterval(() => {
-      setRemainingSeconds((prev) => {
-        if (prev <= 1) {
-          if (typeof window !== "undefined") {
-            sessionStorage.removeItem(STORAGE_KEY);
-            sessionStorage.removeItem(TOTAL_DURATION_KEY);
-          }
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [remainingSeconds]);
-
-  /**
-   * Inicia el periodo de enfriamiento
-   */
   const startCooldown = useCallback((duration: number = defaultDurationSeconds) => {
-    const expiryTimestamp = Date.now() + duration * 1000;
-    if (typeof window !== "undefined") {
-      sessionStorage.setItem(STORAGE_KEY, expiryTimestamp.toString());
-      sessionStorage.setItem(TOTAL_DURATION_KEY, duration.toString());
-    }
-    setTotalSeconds(duration);
-    setRemainingSeconds(duration);
+    const seconds = Number.isFinite(duration) && duration > 0 ? Math.ceil(duration) : defaultDurationSeconds;
+    const nextExpiry = Date.now() + seconds * 1000;
+    setExpiry(nextExpiry);
+    setTotalSeconds(seconds);
+    setRemainingSeconds(seconds);
+    try {
+      sessionStorage.setItem(STORAGE_KEY, String(nextExpiry));
+      sessionStorage.setItem(TOTAL_DURATION_KEY, String(seconds));
+    } catch { /* Storage is optional. */ }
   }, [defaultDurationSeconds]);
 
-  const isCooldownActive = remainingSeconds > 0;
-  // Porcentaje restante para la barra de progreso dorada
-  const progressPercent = totalSeconds > 0 ? (remainingSeconds / totalSeconds) * 100 : 0;
-
   return {
-    isCooldownActive,
+    isCooldownActive: remainingSeconds > 0,
     remainingSeconds,
     totalSeconds,
-    progressPercent,
+    progressPercent: totalSeconds > 0 ? (remainingSeconds / totalSeconds) * 100 : 0,
     startCooldown,
   };
 }

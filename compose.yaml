@@ -14,7 +14,7 @@ services:
     ports:
       - "80:80"     # Trafico HTTP publico
       - "443:443"   # Trafico HTTPS seguro
-      - "81:81"     # Panel de administracion web de Nginx Proxy Manager
+      - "127.0.0.1:81:81"     # Panel de administracion web de Nginx Proxy Manager
     environment:
       DISABLE_IPV6: "true"
     volumes:
@@ -50,7 +50,7 @@ services:
     environment:
       REDIS_PASSWORD: ${REDIS_PASSWORD:-lessso_redis_secure_password_change_me}
     ports:
-      - "${PORT_REDIS:-6379}:6379"
+      - "127.0.0.1:${PORT_REDIS:-6379}:6379"
     volumes:
       - redisdata:/data
     networks:
@@ -61,7 +61,7 @@ services:
           cpus: "0.50"
           memory: 256M
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD-SHELL", "redis-cli -a \"$$REDIS_PASSWORD\" ping | grep -q PONG"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -78,15 +78,24 @@ services:
     restart: unless-stopped
     environment:
       NODE_ENV: ${NODE_ENV:-production}
-      PORT: ${PORT_BACKEND:-4000}
+      PORT: 4000
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
       REDIS_URL: ${REDIS_URL:-redis://:lessso_redis_secure_password_change_me@lessso-redis:6379}
       COOLDOWN_SECONDS: ${COOLDOWN_SECONDS:-90}
+      RATE_LIMIT_MAX_REQUESTS: ${RATE_LIMIT_MAX_REQUESTS:-10}
+      RATE_LIMIT_WINDOW_MINUTES: ${RATE_LIMIT_WINDOW_MINUTES:-15}
+      TRUSTED_PROXY_IPS: ${TRUSTED_PROXY_IPS:-}
+      CONTACT_FORM_ENABLED: ${CONTACT_FORM_ENABLED:-false}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-465}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM: ${SMTP_FROM:-}
       HONEYPOT_FIELD_NAME: ${HONEYPOT_FIELD_NAME:-website_verification_code}
       OFFICIAL_CONTACT_EMAIL: ${OFFICIAL_CONTACT_EMAIL:-contacto@lessso.com}
       WHATSAPP_PHONE_NUMBER: ${WHATSAPP_PHONE_NUMBER:-000000000000}
     ports:
-      - "${PORT_BACKEND:-4000}:4000"
+      - "127.0.0.1:${PORT_BACKEND:-4000}:4000"
     depends_on:
       lessso-redis:
         condition: service_healthy
@@ -111,15 +120,20 @@ services:
     build:
       context: .
       dockerfile: docker/front.Dockerfile
+      args:
+        NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:-}
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-}
+        NEXT_PUBLIC_CONTACT_FORM_ENABLED: ${NEXT_PUBLIC_CONTACT_FORM_ENABLED:-false}
+        NEXT_PUBLIC_LEGAL_PAGES_ENABLED: ${NEXT_PUBLIC_LEGAL_PAGES_ENABLED:-false}
     container_name: lessso-front
     restart: unless-stopped
     environment:
       NODE_ENV: ${NODE_ENV:-production}
-      PORT: ${PORT_FRONTEND:-3000}
+      PORT: 3000
       NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:-http://localhost:4000}
       NEXT_PUBLIC_WHATSAPP_NUMBER: ${NEXT_PUBLIC_WHATSAPP_NUMBER:-000000000000}
     ports:
-      - "${PORT_FRONTEND:-3000}:3000"
+      - "127.0.0.1:${PORT_FRONTEND:-3000}:3000"
     depends_on:
       - lessso-back
     networks:

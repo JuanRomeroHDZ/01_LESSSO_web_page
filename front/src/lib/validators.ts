@@ -88,7 +88,7 @@ export function sanitizeInput(input: string): string {
     .trim();
 }
 
-const nameRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s.-]+$/;
+const nameRegex = /^[\p{L}\p{M}\s.'’\-]+$/u;
 export const phoneDigitsRegex = /^\d{10,15}$/;
 
 export const contactFormSchema = z
@@ -96,12 +96,10 @@ export const contactFormSchema = z
     entityType: z.enum(["PERSON", "COMPANY"]),
     fullName: z
       .string()
+      .trim()
       .min(3, "El nombre completo debe tener al menos 3 caracteres")
       .max(80, "El nombre no puede exceder 80 caracteres")
-      .regex(nameRegex, "El nombre solo puede contener letras, espacios, puntos o guiones")
-      .refine((val) => !val.includes("'") && !val.includes('"'), {
-        message: "No se permiten comillas en el nombre",
-      })
+      .regex(nameRegex, "El nombre solo puede contener letras, espacios, puntos, guiones o apóstrofos")
       .refine((val) => !containsSqlInjection(val), {
         message: "Se detectaron patrones no permitidos (SQLi) en el nombre",
       })
@@ -110,6 +108,7 @@ export const contactFormSchema = z
       }),
     email: z
       .string()
+      .trim()
       .email("Ingrese un correo electronico valido")
       .max(100, "El correo no puede exceder 100 caracteres")
       .refine((val) => !containsSqlInjection(val), {
@@ -118,7 +117,7 @@ export const contactFormSchema = z
       .refine((val) => !containsXssOrCommandInjection(val), {
         message: "Se detectaron caracteres no permitidos en el correo",
       }),
-    countryCode: z.string().default("+52"),
+    countryCode: z.string().regex(/^\+\d{1,4}$/),
     phoneNumber: z
       .string()
       .regex(phoneDigitsRegex, "El telefono debe tener entre 10 y 15 digitos estrictamente numericos"),
@@ -130,11 +129,12 @@ export const contactFormSchema = z
         "Consultoría Integral",
       ],
       {
-        errorMap: () => ({ message: "Seleccione un area de interes" }),
+        error: "Seleccione un area de interes",
       }
     ),
     projectDetails: z
       .string()
+      .trim()
       .min(20, "Por favor proporcione al menos 20 caracteres sobre su proyecto")
       .max(500, "Los detalles no pueden exceder 500 caracteres")
       .refine((val) => !containsSqlInjection(val), {
@@ -153,10 +153,8 @@ export const contactFormSchema = z
     // Campos condicionales para Empresa
     companyName: z
       .string()
+      .trim()
       .max(100, "Maximo 100 caracteres")
-      .refine((val) => !val || (!val.includes("'") && !val.includes('"')), {
-        message: "No se permiten comillas en el nombre de empresa",
-      })
       .refine((val) => !val || !containsSqlInjection(val), {
         message: "Se detectaron patrones no permitidos (SQLi) en el nombre de la empresa",
       })
@@ -166,10 +164,8 @@ export const contactFormSchema = z
       .optional(),
     jobTitle: z
       .string()
+      .trim()
       .max(100, "Maximo 100 caracteres")
-      .refine((val) => !val || (!val.includes("'") && !val.includes('"')), {
-        message: "No se permiten comillas en el puesto",
-      })
       .refine((val) => !val || !containsSqlInjection(val), {
         message: "Se detectaron patrones no permitidos (SQLi) en el puesto",
       })

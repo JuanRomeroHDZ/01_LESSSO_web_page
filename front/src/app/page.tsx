@@ -4,7 +4,7 @@ import React from "react";
 import { PageLayout } from "@/components/templates/PageLayout";
 import { HeroSection } from "@/components/organisms/HeroSection";
 import { TrustPillarsSection } from "@/components/organisms/TrustPillarsSection";
-import { CrmContactForm } from "@/components/organisms/CrmContactForm";
+import { ContactSection } from "@/components/organisms/ContactSection";
 
 /**
  * Pagina de Inicio Oficial de LESSSO
@@ -24,7 +24,7 @@ export default function HomePage() {
           <TrustPillarsSection currentLocale={currentLocale} />
 
           {/* Seccion Contacto (Formulario Tecnico Avanzado) */}
-          <CrmContactForm currentLocale={currentLocale} />
+          <ContactSection currentLocale={currentLocale} />
         </>
       )}
     </PageLayout>

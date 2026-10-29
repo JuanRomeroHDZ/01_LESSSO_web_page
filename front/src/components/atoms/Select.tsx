@@ -8,7 +8,7 @@ export interface SelectOption {
 }
 
 export interface SelectProps
-  extends React.SelectHTMLAttributes<HTMLSelectElement> {
+  extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, "children"> {
   options: (string | SelectOption)[];
   placeholder?: string;
   hasError?: boolean;
@@ -19,7 +19,7 @@ export interface SelectProps
  * Estilo arquitectonico con icono vectorial ChevronDown y esquinas al 10%.
  */
 export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
-  ({ className, options, placeholder, hasError = false, children, ...props }, ref) => {
+  ({ className, options, placeholder, hasError = false, ...props }, ref) => {
     return (
       <div className="relative w-full">
         <select

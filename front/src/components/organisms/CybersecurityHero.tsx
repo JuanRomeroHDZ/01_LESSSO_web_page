@@ -71,19 +71,19 @@ export const CybersecurityHero: React.FC<CybersecurityHeroProps> = ({ currentLoc
             <Heading as="h1" size="display" className="text-[#080A0A] dark:text-[#FFFFFF] mb-8 font-normal max-w-3xl">
               {isEs ? (
                 <>
-                  Protección de activos críticos y{" "}
+                  Seguridad para{" "}
                   <span className="italic font-normal text-[#7A1C1C] dark:text-[#F8F8F6]">
-                    resiliencia ofensiva
+                    sus sistemas
                   </span>{" "}
-                  ante amenazas reales.
+                  y su información.
                 </>
               ) : (
                 <>
-                  Protection of critical assets and{" "}
+                  Security for{" "}
                   <span className="italic font-normal text-[#7A1C1C] dark:text-[#F8F8F6]">
-                    offensive resilience
+                    your systems
                   </span>{" "}
-                  against real threats.
+                  and your information.
                 </>
               )}
             </Heading>
@@ -95,14 +95,14 @@ export const CybersecurityHero: React.FC<CybersecurityHeroProps> = ({ currentLoc
               className="text-[#080A0A]/75 dark:text-neutral-300 max-w-2xl mb-10 font-light leading-relaxed text-base md:text-lg"
             >
               {isEs
-                ? "Descubrimos brechas y vulnerabilidades críticas antes de que sean explotadas por adversarios reales. Fortalecemos la infraestructura tecnológica y los activos digitales de su organización mediante rigor metodológico, ingeniería ofensiva y absoluta transparencia técnica."
+                ? "Identificamos vulnerabilidades en sus sistemas y le ayudamos a entender los riesgos y las acciones necesarias para reducirlos."
                 : "We uncover critical breaches and vulnerabilities before adversaries exploit them. We reinforce your technological infrastructure and digital assets through methodical rigor, offensive engineering, and absolute technical transparency."}
             </Text>
 
             {/* Botones de Acción con Esquinas al 10% (rounded-[3px]) */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
               <Link
-                href="/cybersecurity/penetration-testing"
+                href="#especialidades"
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#240B0B] text-[#F8F8F6] hover:bg-[#3D1212] dark:bg-[#7A1C1C] dark:hover:bg-[#9E2A2B] font-sans text-xs uppercase tracking-widest font-medium rounded-[3px] transition-all duration-300 shadow-md group border border-[#240B0B] dark:border-[#7A1C1C]"
               >
                 <span>

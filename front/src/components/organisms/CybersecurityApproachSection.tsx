@@ -38,13 +38,13 @@ export const CybersecurityApproachSection: React.FC<CybersecurityApproachSection
         ? [
             "Auditoría profunda de lógica de negocio y flujos transaccionales.",
             "Encadenamiento de fallas para demostrar impacto real sin daño.",
-            "Validación estricta que descarta el 100% de falsos positivos.",
+            "Revisión manual de los hallazgos para reducir falsos positivos.",
             "Escalada de privilegios horizontal y vertical simulada.",
           ]
         : [
             "In-depth audit of business logic and transactional flows.",
             "Exploit chaining to demonstrate verified real-world impact.",
-            "Strict manual validation eliminating 100% of false positives.",
+            "Manual review of findings to reduce false positives.",
             "Horizontal and vertical privilege escalation testing.",
           ],
     },
@@ -52,21 +52,21 @@ export const CybersecurityApproachSection: React.FC<CybersecurityApproachSection
       id: "automated",
       number: "02",
       icon: Cpu,
-      badge: isEs ? "COBERTURA TOTAL" : "SYSTEMIC COVERAGE",
+      badge: isEs ? "HERRAMIENTAS DE APOYO" : "SUPPORTING TOOLS",
       title: isEs ? "Automatización Inteligente y Escaneo" : "Intelligent Automation & Surface Scanning",
       description: isEs
-        ? "Uso de herramientas de enumeración rápida para mapear puertos, servicios, configuraciones expuestas y vulnerabilidades conocidas (CVEs) sin dejar puntos ciegos."
-        : "High-speed enumeration and scanning suites to exhaustively map active ports, exposed endpoints, legacy configs, and known CVEs without blind spots.",
+        ? "Usamos herramientas para identificar puertos, servicios, configuraciones expuestas y vulnerabilidades conocidas dentro del alcance acordado."
+        : "We use scanning tools to identify ports, services, exposed configurations, and known vulnerabilities within the agreed scope.",
       highlights: isEs
         ? [
-            "Descubrimiento perimetral 360° de subdominios y activos huérfanos.",
-            "Mapeo exhaustivo de puertos, banners y servicios activos.",
+            "Identificación de subdominios y activos expuestos.",
+            "Revisión de puertos y servicios activos.",
             "Detección acelerada de CVEs y configuraciones por defecto.",
             "Sondeo no destructivo respetando umbrales de disponibilidad.",
           ]
         : [
-            "360° external perimeter discovery of subdomains and shadow assets.",
-            "Exhaustive port mapping, service fingerprinting, and banner analysis.",
+            "Identification of exposed subdomains and assets.",
+            "Review of ports and active services.",
             "Accelerated identification of known CVEs and default credentials.",
             "Non-destructive scanning adhering strictly to availability thresholds.",
           ],
@@ -75,23 +75,23 @@ export const CybersecurityApproachSection: React.FC<CybersecurityApproachSection
       id: "ai",
       number: "03",
       icon: BrainCircuit,
-      badge: isEs ? "ANÁLISIS COGNITIVO" : "COGNITIVE CORRELATION",
-      title: isEs ? "Inteligencia Artificial y Correlación" : "AI & Attack Correlation",
+      badge: isEs ? "ANÁLISIS DE RIESGOS" : "RISK ANALYSIS",
+      title: isEs ? "Análisis y prioridades" : "Analysis and priorities",
       description: isEs
-        ? "Correlación inteligente de vectores de ataque, detección de patrones anómalos y priorización acelerada de riesgos de negocio para mitigar brechas con rapidez quirúrgica."
-        : "Intelligent correlation of complex attack vectors, anomalous pattern identification, and risk prioritization to remediate critical breaches with surgical speed.",
+        ? "Analizamos los resultados de las pruebas y priorizamos los riesgos para ayudarle a decidir qué atender primero."
+        : "We review test results and prioritize risks to help you decide what to address first.",
       highlights: isEs
         ? [
-            "Modelado probabilístico de vectores de intrusión lateral.",
-            "Correlación contextual entre respuestas de servidor y telemetría.",
-            "Priorización de vulnerabilidades basada en impacto operativo real.",
-            "Generación asistida de pautas y comandos exactos de remediación.",
+            "Análisis de hallazgos en el contexto de su organización.",
+            "Relación entre vulnerabilidades y sistemas afectados.",
+            "Priorización según impacto y riesgo.",
+            "Recomendaciones claras para corregir los problemas.",
           ]
         : [
-            "Probabilistic modeling of lateral movement vectors.",
-            "Contextual correlation across server responses and telemetry data.",
-            "Risk-based prioritization focused on tangible business impact.",
-            "Assisted generation of precise remediation commands and patch blueprints.",
+            "Reviewing findings in the context of your organization.",
+            "Connecting vulnerabilities with affected systems.",
+            "Prioritizing by impact and risk.",
+            "Clear recommendations for addressing the findings.",
           ],
     },
   ];
@@ -146,7 +146,7 @@ export const CybersecurityApproachSection: React.FC<CybersecurityApproachSection
 
           <Text variant="lead" className="text-[#080A0A]/75 dark:text-neutral-300 font-light leading-relaxed">
             {isEs
-              ? "Rechazamos las auditorías genéricas que dependen de reportes automáticos inflados de falsos positivos, así como las evaluaciones manuales ciegas que ignoran la amplitud del perímetro. Integramos pericia humana especializada, automatización inteligente y modelos predictivos para blindar cada vector de su organización."
+              ? "Combinamos pruebas manuales y herramientas de apoyo para revisar los sistemas dentro del alcance acordado y presentar hallazgos que su equipo pueda atender."
               : "We reject commodity audits driven by automated scanners that inflate reports with noise, as well as unassisted manual testing that misses perimeter sprawl. We unify human expertise, scalable automation, and predictive models to fortify every angle."}
           </Text>
         </div>

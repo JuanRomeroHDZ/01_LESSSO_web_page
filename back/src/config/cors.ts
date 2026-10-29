@@ -12,17 +12,11 @@ export const corsOptions: FastifyCorsOptions = {
       return callback(null, true);
     }
 
-    const allowedOrigins = [
-      env.FRONTEND_URL,
-      "http://localhost:3000",
-      "https://lessso.com",
-      "https://www.lessso.com",
-    ];
-
-    if (allowedOrigins.includes(origin) || env.NODE_ENV === "development") {
+    // The configured site is the only browser origin authorized to call the API.
+    if (origin === env.FRONTEND_URL) {
       callback(null, true);
     } else {
-      callback(new Error("[CORS_BLOCKED] Origen no autorizado por politicas de seguridad."), false);
+      callback(null, false);
     }
   },
   methods: ["GET", "POST", "OPTIONS"],
